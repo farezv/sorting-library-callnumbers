@@ -1,8 +1,13 @@
-gwt-unitCache/
-war/
-
 # Package Files #
 *.jar
 *.war
 *.ear
-*.gwt-unitCache
+gwt-unitCache
+*.iml
+.settings
+.idea
+.classpath
+.gwt
+bin
+META-INF
+.checkstyle
