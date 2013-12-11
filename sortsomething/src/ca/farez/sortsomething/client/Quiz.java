@@ -1,5 +1,5 @@
-/**
- * 
+/*
+ * Copyright 2013 Farez Vadsaria
  */
 package ca.farez.sortsomething.client;
 
