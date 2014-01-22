@@ -50,7 +50,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class Sortsomething implements EntryPoint {
 	
-	private VerticalPanel mainPanel = new VerticalPanel();  
+	// Panels
+	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
+	final HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
+	
+	// Buttons
+	Button scoreMeButton = new Button("Score Me!");
 	
 	public Quiz newQuiz;
 
@@ -61,26 +66,34 @@ public class Sortsomething implements EntryPoint {
 		// Drag handler
 		final DragHandler demoDragHandler = null;
 		
-		// Creating boundary panel to constrain drag operations
-		AbsolutePanel boundaryPanel = new AbsolutePanel();
-		boundaryPanel.setPixelSize(500,400);
+		// Boundary panel setup
+		boundaryPanel.setPixelSize(960,400);
 		boundaryPanel.addStyleName("boundaryPanel");
 		boundaryPanel.getElement().getStyle().setProperty("position", "relative");
 		
-		// Creating call number panel
-		HorizontalPanel cnPanel = new HorizontalPanel();
+		// Call number panel setup	
 		cnPanel.addStyleName("cnPanel");
 		cnPanel.setPixelSize(400, 90);
+				
+		// ScoreMe button setup
+		scoreMeButton.setPixelSize(100,100);
+		scoreMeButton.setStyleName("scoreMe");
+	    scoreMeButton.addClickHandler(new ClickHandler() {
+	      public void onClick(ClickEvent event) {
+	    	// Finds the position on buttons/callnumbers as arranged by users  
+	        int numOfButtons = cnPanel.getWidgetCount();
+	        setUserOrder(numOfButtons);
+	        
+	        // Get our computed solution
+	        
+	        // Compare the two and find mistakes (if any)
+	      }
+	    });
 		
-//		// Creating target panel
-//		AbsolutePanel targetPanel = new AbsolutePanel();
-//		targetPanel.setPixelSize(400, 25);
-//		targetPanel.addStyleName("targetPanel");
-		
-		// Adding both panels to Root
+		// Adding panels & buttons to Root
 		RootPanel.get().add(boundaryPanel);
 		boundaryPanel.add(cnPanel);
-		//boundaryPanel.add(targetPanel);
+		boundaryPanel.add(scoreMeButton);		
 		
 		// Create drag controller
 		PickupDragController widgetDragController = new PickupDragController(boundaryPanel, false);
@@ -93,11 +106,10 @@ public class Sortsomething implements EntryPoint {
 		
 		// Assemble call number panel.
 		newQuiz = new Quiz();
-		
 		Button cnb;
 		
-		for(int i = 0; i < newQuiz.callnums.size(); i++) {
-			cnb = new Button(newQuiz.callnums.get(i));
+		for(int i = 0; i < newQuiz.callNums.size(); i++) {
+			cnb = new Button(newQuiz.callNums.get(i));
 			// TODO cnb.addStyleName("lineBreak");
 			cnPanel.add(cnb);
 			cnb.setPixelSize(50,70);
@@ -108,10 +120,19 @@ public class Sortsomething implements EntryPoint {
 		
 		// Associate the Main panel with the HTML host page.  
 		//RootPanel.get("cnList").add(boundaryPanel);
-				
 		
-		// TODO Get the sorted order.  
-		    
+		// TODO Get the solution order.  
+		    newQuiz.sortQuiz();
+		    		    
 	  }
+	
+	public void setUserOrder(int numButtons) {
+		
+		for (int i = 0; i < numButtons; i++) {
+			Button ucnb = (Button) cnPanel.getWidget(i);
+			newQuiz.userCallNums.add(ucnb.getText());
+			System.out.println(ucnb.getText() + " ");
+		}
+	}
 	
 }
