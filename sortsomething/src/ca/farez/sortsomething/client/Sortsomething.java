@@ -85,8 +85,10 @@ public class Sortsomething implements EntryPoint {
 	        setUserOrder(numOfButtons);
 	        
 	        // Get our computed solution
-	        
+		    newQuiz.sortQuiz();
+		    
 	        // Compare the two and find mistakes (if any)
+		    newQuiz.compare();
 	      }
 	    });
 		
@@ -119,19 +121,16 @@ public class Sortsomething implements EntryPoint {
 		
 		
 		// Associate the Main panel with the HTML host page.  
-		//RootPanel.get("cnList").add(boundaryPanel);
-		
-		// TODO Get the solution order.  
-		    newQuiz.sortQuiz();
-		    		    
+		//RootPanel.get("cnList").add(boundaryPanel);		    		    
 	  }
 	
 	public void setUserOrder(int numButtons) {
 		
+		System.out.println("*****USER SOLUTION*****\n"); 
 		for (int i = 0; i < numButtons; i++) {
 			Button ucnb = (Button) cnPanel.getWidget(i);
 			newQuiz.userCallNums.add(ucnb.getText());
-			System.out.println(ucnb.getText() + " ");
+			System.out.println(ucnb.getText());
 		}
 	}
 	
