@@ -23,16 +23,7 @@ public class Quiz {
 	public ArrayList<String> userCallNums = new ArrayList<String>();
 	private int mistakes;
 	
-	public Quiz() {
-		// TODO Check parameter
-		
-		// TODO for loop adding each individual string from text file
-		callNums.add("A100 TA2 2006");
-		callNums.add("B200 C20 1991");
-		callNums.add("B200 C20 1988");
-		callNums.add("B40 A20 2001");
-		callNums.add("A2 D25.2 E22 1976");
-		
+	public Quiz() {		
 		mistakes = 0;
 	}
 	
@@ -84,5 +75,16 @@ public class Quiz {
 			msg = "You have" + " mistakes!!";
 		}
 		Window.alert(msg); // can use confirm() instead if returned boolean desired to close quiz
+	}
+	
+	// Populates the quiz from user input
+	public void populate(String string) {
+		System.out.println("****Populating Quiz****\n");
+		String input[] = string.split("\n");
+		for(int i = 0; i < input.length; i++) {
+			System.out.println(input[i]);
+			// TODO Check duplicates!
+			callNums.add(input[i]);
+		}
 	}
 }

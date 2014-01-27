@@ -42,6 +42,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -49,83 +50,105 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Sortsomething implements EntryPoint {
-	
+
 	// Panels
 	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
 	final HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
-	
+	HorizontalPanel mainPanel = new HorizontalPanel();
+
 	// Buttons
 	Button scoreMeButton = new Button("Score Me!");
-	
-	public Quiz newQuiz;
+
+	// Input
+	public TextArea inputArea = new TextArea();
+	public Quiz newQuiz = new Quiz();
 
 
 	/* Entry point method.  */  
 	public void onModuleLoad() {  
-	
+
 		// Drag handler
 		final DragHandler demoDragHandler = null;
-		
+
 		// Boundary panel setup
-		boundaryPanel.setPixelSize(960,400);
+		boundaryPanel.setPixelSize(500,400);
 		boundaryPanel.addStyleName("boundaryPanel");
 		boundaryPanel.getElement().getStyle().setProperty("position", "relative");
-		
+
 		// Call number panel setup	
 		cnPanel.addStyleName("cnPanel");
 		cnPanel.setPixelSize(400, 90);
-				
-		// ScoreMe button setup
-		scoreMeButton.setPixelSize(100,100);
-		scoreMeButton.setStyleName("scoreMe");
-	    scoreMeButton.addClickHandler(new ClickHandler() {
-	      public void onClick(ClickEvent event) {
-	    	// Finds the position on buttons/callnumbers as arranged by users  
-	        int numOfButtons = cnPanel.getWidgetCount();
-	        setUserOrder(numOfButtons);
-	        
-	        // Get our computed solution
-		    newQuiz.sortQuiz();
-		    
-	        // Compare the two and find mistakes (if any)
-		    newQuiz.compare();
-	      }
-	    });
-		
-		// Adding panels & buttons to Root
-		RootPanel.get().add(boundaryPanel);
-		boundaryPanel.add(cnPanel);
-		boundaryPanel.add(scoreMeButton);		
-		
-		// Create drag controller
-		PickupDragController widgetDragController = new PickupDragController(boundaryPanel, false);
-	    widgetDragController.setBehaviorMultipleSelection(false);
-	    //widgetDragController.addDragHandler(demoDragHandler);
-		
-		// Creating HP drag controller
+
+		// Setting up widget drag controller
+		final PickupDragController widgetDragController = new PickupDragController(boundaryPanel, false);
+		widgetDragController.setBehaviorMultipleSelection(false);
+		//widgetDragController.addDragHandler(demoDragHandler);
+
+		// Setting up HP drag controller
 		HorizontalPanelDropController widgetDropController = new HorizontalPanelDropController(	cnPanel);
 		widgetDragController.registerDropController(widgetDropController);
+
+		// ScoreMe button setup
+		scoreMeButton.setPixelSize(100,40);
+		scoreMeButton.setStyleName("scoreMe");
+		scoreMeButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				// Finds the position on buttons/callnumbers as arranged by users  
+				int numOfButtons = cnPanel.getWidgetCount();
+				setUserOrder(numOfButtons);
+
+				// Get our computed solution
+				newQuiz.sortQuiz();
+
+				// Compare the two and find mistakes (if any)
+				newQuiz.compare();
+			}
+		});
+
+		// inputBox text box setup
+		inputArea.setFocus(true);
+		inputArea.setPixelSize(500,400);
+
+		inputArea.addKeyDownHandler(new KeyDownHandler() {
+			public void onKeyDown(KeyDownEvent event) {
+				if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+					newQuiz.populate(inputArea.getText());
+
+					// Assemble call number panel.
+					// TODO figure out how to switch to next panel if we've reached the right most side
+					Button cnb;
+
+					for(int i = 0; i < newQuiz.callNums.size(); i++) {
+						cnb = new Button(newQuiz.callNums.get(i));
+						// TODO cnb.addStyleName("lineBreak");
+						cnPanel.add(cnb);
+						cnb.setPixelSize(50,70);
+						
+						widgetDragController.makeDraggable(cnb);
+					}
+					}
+				}
+		});
+
 		
-		// Assemble call number panel.
-		newQuiz = new Quiz();
-		Button cnb;
+		// Populating Boundary Panel
+		boundaryPanel.add(cnPanel);
+		boundaryPanel.add(scoreMeButton);
 		
-		for(int i = 0; i < newQuiz.callNums.size(); i++) {
-			cnb = new Button(newQuiz.callNums.get(i));
-			// TODO cnb.addStyleName("lineBreak");
-			cnPanel.add(cnb);
-			cnb.setPixelSize(50,70);
-			
-			widgetDragController.makeDraggable(cnb);
-		}
-		
-		
+		// Populating Main Panel
+		mainPanel.add(inputArea);
+		mainPanel.setPixelSize(960, 600);
+		mainPanel.add(boundaryPanel);
+
+		// Adding panels & buttons to Root
+		RootPanel.get().add(mainPanel);
+
 		// Associate the Main panel with the HTML host page.  
 		//RootPanel.get("cnList").add(boundaryPanel);		    		    
-	  }
-	
+	}
+
 	public void setUserOrder(int numButtons) {
-		
+
 		System.out.println("*****USER SOLUTION*****\n"); 
 		for (int i = 0; i < numButtons; i++) {
 			Button ucnb = (Button) cnPanel.getWidget(i);
@@ -133,5 +156,5 @@ public class Sortsomething implements EntryPoint {
 			System.out.println(ucnb.getText());
 		}
 	}
-	
+
 }
