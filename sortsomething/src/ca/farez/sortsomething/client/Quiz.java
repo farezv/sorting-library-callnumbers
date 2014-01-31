@@ -3,7 +3,6 @@
  */
 package ca.farez.sortsomething.client;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -31,21 +30,6 @@ public class Quiz {
 	 * */
 	public void sortQuiz() {
 		
-//		Collator myCollator = Collator.getInstance();
-//		
-//		// Sort and print sorted call number list
-//		for(int i = 0; i < callnums.size(); i++) {
-//			
-//			String source = callnums.get(i);
-//			String target = callnums.get(i+1);
-//			if(myCollator.compare(source,target) < 0) {
-//				sortedCallnums.add(i, source);
-//				System.out.println("Earlier < Later");
-//			} else {
-//				sortedCallnums.add(i, target);
-//				System.out.println("Later < Earlier");
-//			}
-		
 		String[] cnums = new String[callNums.size()];
 		for(int i = 0; i < cnums.length; i++) {
 			cnums[i] = callNums.get(i);
@@ -57,6 +41,8 @@ public class Quiz {
 			System.out.println(cnums[i]);
 			sortedCallNums.add(i, cnums[i]);
 		}
+		
+		
 	
 		//System.out.println(sortedCallNums);
 	}
@@ -81,7 +67,8 @@ public class Quiz {
 	
 	/* Populates the quiz from user input
 	 * */
-	public void populate(String string) {
+	public int populate(String string) {
+		int newCallNums = 0; // keeps track of any new callnumbers added to the textArea
 		System.out.println("****Populating Quiz****\n");
 		// This is how a large string turns into smaller call number strings.
 		String input[] = string.split("\n");
@@ -91,14 +78,15 @@ public class Quiz {
 		for(int i = 0; i < input.length; i++) {
 			System.out.println(input[i]);
 			
-			// TODO Check duplicates!
+			// Check duplicates!
 			if(isDuplicate(input[i])) { // expensive call!
 				System.out.println(input[i] + " is already in list!");
-				break; // skip this iteration
 			} else {			
 					callNums.add(input[i]);
+					newCallNums++;
 			}
 		}
+		return newCallNums;
 	}
 
 	/* Checks for duplicates in callNums before populating it.

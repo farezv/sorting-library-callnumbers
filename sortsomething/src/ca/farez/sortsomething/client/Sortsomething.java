@@ -122,19 +122,20 @@ public class Sortsomething implements EntryPoint {
 				if (input == null || input.trim().equals("")) { // Checking for empty strings
 					Window.alert("Please type something in the text box!");
 				} else {	
-						newQuiz.populate(input);					
+						int newCallNums = newQuiz.populate(input);					
 						
-						// TODO Reassemble call number panel only if there are NEW call numbers!
-						// TODO figure out how to switch to next panel if we've reached the right most side
-						Button cnb;
-	
-						for(int i = 0; i < newQuiz.callNums.size(); i++) {
-							cnb = new Button(newQuiz.callNums.get(i));
-							// TODO cnb.addStyleName("lineBreak");
-							cnPanel.add(cnb);
-							cnb.setPixelSize(50,70);
-							
-							widgetDragController.makeDraggable(cnb);
+						// Reassemble call number panel only if there are NEW call numbers!
+						if(newCallNums > 0) {
+							cnPanel.clear();
+							// TODO figure out how to switch to next panel if we've reached the right most side
+							Button cnb;		
+							for(int i = 0; i < newQuiz.callNums.size(); i++) {
+								cnb = new Button(newQuiz.callNums.get(i));
+								// TODO cnb.addStyleName("lineBreak");
+								cnPanel.add(cnb);
+								cnb.setPixelSize(60,70);								
+								widgetDragController.makeDraggable(cnb);
+							}
 						}
 				}	
 			}
