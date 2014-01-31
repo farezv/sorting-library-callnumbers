@@ -18,16 +18,17 @@ import com.google.gwt.user.client.ui.Button;
  */
 public class Quiz {
 	
-	public ArrayList<String> callNums = new ArrayList<String>();
-	public ArrayList<String> sortedCallNums = new ArrayList<String>();
-	public ArrayList<String> userCallNums = new ArrayList<String>();
-	private int mistakes;
+	public ArrayList<String> callNums = new ArrayList<String>(); // Quiz input, maybe sorted or unsorted
+	public ArrayList<String> sortedCallNums = new ArrayList<String>(); // Our solution, should be sorted
+	public ArrayList<String> userCallNums = new ArrayList<String>(); // User's solution, maybe sorted or unsorted
+	private int mistakes; // Difference between our solution and user's
 	
 	public Quiz() {		
 		mistakes = 0;
 	}
 	
-	// Sorting call number strings. Brace yourself. Winter is coming!
+	/* Sorting call number strings. Brace yourself. Winter is coming!
+	 * */
 	public void sortQuiz() {
 		
 //		Collator myCollator = Collator.getInstance();
@@ -60,7 +61,8 @@ public class Quiz {
 		//System.out.println(sortedCallNums);
 	}
 
-	// TODO Get the user order.
+	/* Compare our solution order to the one provided by the user.
+	 * */
 	public void compare() {
 		mistakes = 0;
 		System.out.println("*****COMPARE SOLUTIONS*****\n"); 
@@ -77,14 +79,37 @@ public class Quiz {
 		Window.alert(msg); // can use confirm() instead if returned boolean desired to close quiz
 	}
 	
-	// Populates the quiz from user input
+	/* Populates the quiz from user input
+	 * */
 	public void populate(String string) {
 		System.out.println("****Populating Quiz****\n");
+		// This is how a large string turns into smaller call number strings.
 		String input[] = string.split("\n");
+		
+		// TODO Populate this randomly in case the "supervisor" gives an already sorted quiz
+		
 		for(int i = 0; i < input.length; i++) {
 			System.out.println(input[i]);
+			
 			// TODO Check duplicates!
-			callNums.add(input[i]);
+			if(isDuplicate(input[i])) { // expensive call!
+				System.out.println(input[i] + " is already in list!");
+				break; // skip this iteration
+			} else {			
+					callNums.add(input[i]);
+			}
 		}
+	}
+
+	/* Checks for duplicates in callNums before populating it.
+	 * */
+	public boolean isDuplicate(String string) {
+		for(int i = 0; i < callNums.size(); i++) {
+			System.out.println("Does " + string + " equal " + callNums.get(i));
+			if (string.equals(callNums.get(i))) {				
+				return true;
+			}
+		}		
+		return false;
 	}
 }

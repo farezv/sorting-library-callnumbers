@@ -55,9 +55,12 @@ public class Sortsomething implements EntryPoint {
 	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
 	final HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
 	HorizontalPanel mainPanel = new HorizontalPanel();
-
+	VerticalPanel leftPanel = new VerticalPanel();
+	VerticalPanel rightPanel = new VerticalPanel();
+	
 	// Buttons
 	Button scoreMeButton = new Button("Score Me!");
+	Button startQuizButton = new Button("Start Quiz!");
 
 	// Input
 	public TextArea inputArea = new TextArea();
@@ -88,10 +91,12 @@ public class Sortsomething implements EntryPoint {
 		HorizontalPanelDropController widgetDropController = new HorizontalPanelDropController(	cnPanel);
 		widgetDragController.registerDropController(widgetDropController);
 
-		// ScoreMe button setup
+		// scoreMe button setup
 		scoreMeButton.setPixelSize(100,40);
-		scoreMeButton.setStyleName("scoreMe");
+		//scoreMeButton.setStyleName("scoreMe");
 		scoreMeButton.addClickHandler(new ClickHandler() {
+			
+			@Override
 			public void onClick(ClickEvent event) {
 				// Finds the position on buttons/callnumbers as arranged by users  
 				int numOfButtons = cnPanel.getWidgetCount();
@@ -104,41 +109,58 @@ public class Sortsomething implements EntryPoint {
 				newQuiz.compare();
 			}
 		});
+		
+		// startQuiz button setup
+		startQuizButton.setPixelSize(100,40);
+		startQuizButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				String input = inputArea.getText();
+				
+				if (input == null || input.trim().equals("")) { // Checking for empty strings
+					Window.alert("Please type something in the text box!");
+				} else {	
+						newQuiz.populate(input);					
+						
+						// TODO Reassemble call number panel only if there are NEW call numbers!
+						// TODO figure out how to switch to next panel if we've reached the right most side
+						Button cnb;
+	
+						for(int i = 0; i < newQuiz.callNums.size(); i++) {
+							cnb = new Button(newQuiz.callNums.get(i));
+							// TODO cnb.addStyleName("lineBreak");
+							cnPanel.add(cnb);
+							cnb.setPixelSize(50,70);
+							
+							widgetDragController.makeDraggable(cnb);
+						}
+				}	
+			}
+		});
 
 		// inputBox text box setup
 		inputArea.setFocus(true);
 		inputArea.setPixelSize(500,400);
 
-		inputArea.addKeyDownHandler(new KeyDownHandler() {
-			public void onKeyDown(KeyDownEvent event) {
-				if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					newQuiz.populate(inputArea.getText());
-
-					// Assemble call number panel.
-					// TODO figure out how to switch to next panel if we've reached the right most side
-					Button cnb;
-
-					for(int i = 0; i < newQuiz.callNums.size(); i++) {
-						cnb = new Button(newQuiz.callNums.get(i));
-						// TODO cnb.addStyleName("lineBreak");
-						cnPanel.add(cnb);
-						cnb.setPixelSize(50,70);
-						
-						widgetDragController.makeDraggable(cnb);
-					}
-					}
-				}
-		});
-
+		// Left panel setup
+		leftPanel.setPixelSize(510, 600);
+		leftPanel.add(inputArea);
+		leftPanel.add(startQuizButton);
+		
+		// Right panel setup
+		rightPanel.setPixelSize(490, 600);
+		rightPanel.add(boundaryPanel);
+		rightPanel.add(scoreMeButton);
 		
 		// Populating Boundary Panel
 		boundaryPanel.add(cnPanel);
-		boundaryPanel.add(scoreMeButton);
 		
-		// Populating Main Panel
-		mainPanel.add(inputArea);
+		// Populating Main Panel		
 		mainPanel.setPixelSize(960, 600);
-		mainPanel.add(boundaryPanel);
+		mainPanel.add(leftPanel);
+		mainPanel.add(rightPanel);
 
 		// Adding panels & buttons to Root
 		RootPanel.get().add(mainPanel);
