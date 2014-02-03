@@ -12,8 +12,8 @@ import com.google.gwt.user.client.ui.Button;
 /**
  * @author farez
  * 	
- * Generates a call number quiz given a size
- * @param integer size, default param is 10
+ * Generates a call number quiz given a list
+ * @param populate() is given a string which is split by \\n
  */
 public class Quiz {
 	
@@ -41,8 +41,7 @@ public class Quiz {
 			System.out.println(cnums[i]);
 			sortedCallNums.add(i, cnums[i]);
 		}
-		
-		
+	
 	
 		//System.out.println(sortedCallNums);
 	}

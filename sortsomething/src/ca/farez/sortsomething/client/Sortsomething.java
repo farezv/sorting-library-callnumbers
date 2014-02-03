@@ -51,6 +51,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class Sortsomething implements EntryPoint {
 
+	// Size Constants
+	int leftWidth = 150;
+	int leftHeight = 400;	
+	int rightWidth = 1000;
+	int rightHeight = 400;
+	
 	// Panels
 	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
 	final HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
@@ -74,7 +80,7 @@ public class Sortsomething implements EntryPoint {
 		final DragHandler demoDragHandler = null;
 
 		// Boundary panel setup
-		boundaryPanel.setPixelSize(500,400);
+		boundaryPanel.setPixelSize(rightWidth,rightHeight);
 		boundaryPanel.addStyleName("boundaryPanel");
 		boundaryPanel.getElement().getStyle().setProperty("position", "relative");
 
@@ -143,15 +149,15 @@ public class Sortsomething implements EntryPoint {
 
 		// inputBox text box setup
 		inputArea.setFocus(true);
-		inputArea.setPixelSize(500,400);
+		inputArea.setPixelSize(leftWidth,leftHeight);
 
 		// Left panel setup
-		leftPanel.setPixelSize(510, 600);
+		leftPanel.setPixelSize(leftWidth + 10, leftHeight + 200);
 		leftPanel.add(inputArea);
 		leftPanel.add(startQuizButton);
 		
 		// Right panel setup
-		rightPanel.setPixelSize(490, 600);
+		rightPanel.setPixelSize(rightWidth, rightHeight + 200);
 		rightPanel.add(boundaryPanel);
 		rightPanel.add(scoreMeButton);
 		
@@ -167,7 +173,9 @@ public class Sortsomething implements EntryPoint {
 		RootPanel.get().add(mainPanel);
 
 		// Associate the Main panel with the HTML host page.  
-		//RootPanel.get("cnList").add(boundaryPanel);		    		    
+		//RootPanel.get("cnList").add(boundaryPanel);
+		
+		callNumberButtonExperiment();
 	}
 
 	public void setUserOrder(int numButtons) {
@@ -178,6 +186,22 @@ public class Sortsomething implements EntryPoint {
 			newQuiz.userCallNums.add(ucnb.getText());
 			System.out.println(ucnb.getText());
 		}
+	}
+	
+	/* Experimental object oriented call number sorting
+	 * */
+	public void callNumberButtonExperiment() {
+		
+        CallNumberButton[] cnbs = null;        
+        CallNumberButton[] sortedCnbs;
+        
+        for(int i = 0; i < newQuiz.callNums.size(); i++) {
+            cnbs[i] = new CallNumberButton(newQuiz.callNums.get(i));
+        }
+        
+        for(int j = 0; j < cnbs.length; j++) {
+	        //cnbs[i]
+	    }
 	}
 
 }
