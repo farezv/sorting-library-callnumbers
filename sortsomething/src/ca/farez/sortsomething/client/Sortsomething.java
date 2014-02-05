@@ -63,6 +63,7 @@ public class Sortsomething implements EntryPoint {
 	HorizontalPanel mainPanel = new HorizontalPanel();
 	VerticalPanel leftPanel = new VerticalPanel();
 	VerticalPanel rightPanel = new VerticalPanel();
+	Label mistakeLabel;
 	
 	// Buttons
 	Button scoreMeButton = new Button("Score Me!");
@@ -112,7 +113,17 @@ public class Sortsomething implements EntryPoint {
 				newQuiz.sortQuiz();
 
 				// Compare the two and find mistakes (if any)
-				newQuiz.compare();
+				int mistakes = newQuiz.compare();
+				if(mistakes > 0) {
+					mistakeLabel = new Label("Number of mistakes = " + mistakes);
+					mistakeLabel.addStyleName("yesMistakes");
+				} else {
+					mistakeLabel = new Label("Correct Solution!");
+					mistakeLabel.addStyleName("noMistakes");
+				}
+				
+				boundaryPanel.add(mistakeLabel);
+				//callNumberButtonExperiment();
 			}
 		});
 		
@@ -175,7 +186,6 @@ public class Sortsomething implements EntryPoint {
 		// Associate the Main panel with the HTML host page.  
 		//RootPanel.get("cnList").add(boundaryPanel);
 		
-		callNumberButtonExperiment();
 	}
 
 	public void setUserOrder(int numButtons) {
@@ -192,15 +202,21 @@ public class Sortsomething implements EntryPoint {
 	 * */
 	public void callNumberButtonExperiment() {
 		
-        CallNumberButton[] cnbs = null;        
-        CallNumberButton[] sortedCnbs;
+        CallNumberButton[] unsortedCnbs = new CallNumberButton[2];        
+        CallNumberButton[] sortedCnbs = new CallNumberButton[2];
         
+        // Fill up the unsorted call number button array
         for(int i = 0; i < newQuiz.callNums.size(); i++) {
-            cnbs[i] = new CallNumberButton(newQuiz.callNums.get(i));
+            unsortedCnbs[i] = new CallNumberButton(newQuiz.callNums.get(i));
         }
         
-        for(int j = 0; j < cnbs.length; j++) {
-	        //cnbs[i]
+        for(int j = 0; j < unsortedCnbs.length - 1; j++) {
+	        sortedCnbs[j] = unsortedCnbs[j].compareLevels(unsortedCnbs[j+1]); // j+1 caused a null pointer
+	    }
+        
+        // Print sorted call number array
+        for(int j = 0; j < sortedCnbs.length; j++) {
+	        System.out.println("Index " + j + " = " + sortedCnbs[j]);
 	    }
 	}
 

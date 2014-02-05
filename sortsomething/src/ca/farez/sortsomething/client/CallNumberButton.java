@@ -4,12 +4,14 @@ import com.google.gwt.user.client.ui.Button;
 
 public class CallNumberButton extends Button {
 
-	String[] levels;
+	String[] levels; // CallNumber broken into strings. For instance, "A100 TA2 2006" is ["A100" "TA2" "2006"]
 	
+	/* Constructor sets title and fills up the levels array
+	 * */
 	public CallNumberButton(String string) {
 		
 		this.setTitle(string);
-		String[] levels = string.split("\\s+");
+		String[] levels = string.split("\\s+"); // splitting by whitespace
 		
 		for(int i = 0; i < levels.length; i++) {
 			System.out.println("Level " + i + " " + levels[i]);
@@ -17,30 +19,40 @@ public class CallNumberButton extends Button {
 		
 	}
 
+	/* Compares the strings at levelIndex. Repeatedly called to assess the level of difference!
+	 * */
 	public boolean isLevelEqual(CallNumberButton cnb, int levelIndex) {
 		
 		return this.levels[levelIndex] == cnb.levels[levelIndex];
 	}
 	
-	/* Returns the "alphabetically earlier" callnumber after comparing each level
+	/* Returns the "alphabetically earlier" call number after comparing each level
 	 * */
 	public CallNumberButton compareLevels(CallNumberButton cnb) {
 		
 		CallNumberButton[] sorted;
-		int max = 0; // Smaller of the two call number levels
+		int max = 0; // Smaller of the two call number levels to avoid null pointer exceptions
+		
+		System.out.println("this.levels.length = " + this.levels.length);
 		
 		if (this.levels.length < cnb.levels.length) {
 			max = this.levels.length;
 		} else 	max = cnb.levels.length;	
 		
-		
+		/* If have the following call numbers
+		 * A100 TA2 B62 1999 and A100 TA2 2006
+		 * The latter has 3 levels and the former 4, so max = 3
+		 * Level 0 matches -> increment i (aka level index) i = 1
+		 * Level 1 matches -> increment i					i = 2
+		 * Level 2 doesn't match. Now we compare characters at level 2
+		 */
 		int i = 0;
 		while(this.isLevelEqual(cnb, i) && i != max) {
 			i++;
 		}
 		
 		if(i == max) {
-			return this;
+			return this; 
 		} else {
 			return compareChars(this,cnb,i); //	
 		}
@@ -60,6 +72,7 @@ public class CallNumberButton extends Button {
 			int i = 0;
 			
 			int max = 0;
+			// Making max equal the smaller of the two char sizes to avoid null pointer exceptions
 			if(char1.length < char2.length) {
 				max = char1.length;
 			} else max = char2.length;
@@ -68,17 +81,20 @@ public class CallNumberButton extends Button {
 			if (char1[i] == char2[i]) { // If they are equal, move on to subsequent number chars
 				
 				for(i = 1; i < max; i++) {
-					// compare each subsequent number character
+					// Compare each subsequent (number) character
 					
-					if(char1[i] < char2[i]) {
+					if(Character.toLowerCase(char1[i]) < Character.toLowerCase(char2[i])) {
 						return cnb1;
 					} else {
-						if(char1[i] > char2[i]) return cnb2;
+						if(Character.toLowerCase(char1[i]) > Character.toLowerCase(char2[i])) return cnb2;
 					}					
 				}
 				
 			} else {
-				// compare the first character which is an alphabet char and return CNB
+				// Compare the first character which is an alphabet char and return CNB
+				if(Character.toLowerCase(char1[i]) < Character.toLowerCase(char2[i])) {
+					return cnb1;
+				} else return cnb2;
 			}
 			
 		} else{

@@ -48,7 +48,7 @@ public class Quiz {
 
 	/* Compare our solution order to the one provided by the user.
 	 * */
-	public void compare() {
+	public int compare() {
 		mistakes = 0;
 		System.out.println("*****COMPARE SOLUTIONS*****\n"); 
 		for(int i = 0; i < sortedCallNums.size(); i++) {
@@ -61,7 +61,8 @@ public class Quiz {
 			// Mistakes divided by 2 because a single swap counts as two mistakes when comparing each element in 2 lists
 			msg = "You have" + " mistakes!!";
 		}
-		Window.alert(msg); // can use confirm() instead if returned boolean desired to close quiz
+		// Window.alert(msg); // can use confirm() instead if returned boolean desired to close quiz
+		return mistakes / 2;
 	}
 	
 	/* Populates the quiz from user input

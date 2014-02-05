@@ -34,3 +34,15 @@
 	padding-top: 30px;
 	font-size: 14px;
 }
+
+.noMistakes {
+  padding-top: 30px;
+  font-size: 44px;
+  color: green;
+}
+
+.yesMistakes {
+  padding-top: 30px;
+  font-size: 44px;
+  color: red;
+}
