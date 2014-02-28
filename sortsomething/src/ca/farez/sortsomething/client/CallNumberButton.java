@@ -4,19 +4,18 @@ import com.google.gwt.user.client.ui.Button;
 
 public class CallNumberButton extends Button {
 
-	String[] levels; // CallNumber broken into strings. For instance, "A100 TA2 2006" is ["A100" "TA2" "2006"]
+	private String[] levels; // CallNumber broken into strings. For instance, "A100 TA2 2006" is ["A100" "TA2" "2006"]
 	
 	/* Constructor sets title and fills up the levels array
 	 * */
 	public CallNumberButton(String string) {
 		
 		this.setTitle(string);
-		String[] levels = string.split("\\s+"); // splitting by whitespace
-		
+		levels = string.split("\\s+"); // splitting by whitespace
+		// ^^^ YOURE DECLARING IT AGAIN YOU FOOL!!
 		for(int i = 0; i < levels.length; i++) {
 			System.out.println("Level " + i + " " + levels[i]);
-		}
-		
+		}		
 	}
 
 	/* Compares the strings at levelIndex. Repeatedly called to assess the level of difference!

@@ -22,8 +22,14 @@ public class Quiz {
 	public ArrayList<String> userCallNums = new ArrayList<String>(); // User's solution, maybe sorted or unsorted
 	private int mistakes; // Difference between our solution and user's
 	
+	private int attempts;
+	
 	public Quiz() {		
 		mistakes = 0;
+		attempts = 0;
+//		for(int i = 0; i < size; i++) {
+//			userCallNums.add(null);
+//		}
 	}
 	
 	/* Sorting call number strings. Brace yourself. Winter is coming!
@@ -49,20 +55,27 @@ public class Quiz {
 	/* Compare our solution order to the one provided by the user.
 	 * */
 	public int compare() {
-		mistakes = 0;
+		
+		this.mistakes = 0;
 		System.out.println("*****COMPARE SOLUTIONS*****\n"); 
 		for(int i = 0; i < sortedCallNums.size(); i++) {
 			if(!sortedCallNums.get(i).equals(userCallNums.get(i))) {
-				mistakes++;
+				// These comparisons are failing after you make a mistake once.
+				this.mistakes++;
+				System.out.println("MISTAKES INCREMENTED\n" + sortedCallNums.get(i) + " vs " + userCallNums.get(i));
 			}
 		}
+		
+		//System.out.println("Mistakes compare() loop = " + mistakes + "\n");
 		String msg = "Correct solution!";
 		if (this.mistakes != 0) {
 			// Mistakes divided by 2 because a single swap counts as two mistakes when comparing each element in 2 lists
 			msg = "You have" + " mistakes!!";
+			this.mistakes = this.mistakes / 2;
 		}
 		// Window.alert(msg); // can use confirm() instead if returned boolean desired to close quiz
-		return mistakes / 2;
+		
+		return this.mistakes; // NEVER DIVIDED MISTAKES BY 2 BUT SIMPLY RETURNED IT!
 	}
 	
 	/* Populates the quiz from user input
@@ -99,5 +112,9 @@ public class Quiz {
 			}
 		}		
 		return false;
+	}
+	
+	public int getMistakes() {
+		return this.mistakes;
 	}
 }

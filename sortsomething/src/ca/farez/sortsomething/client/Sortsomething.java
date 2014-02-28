@@ -113,7 +113,9 @@ public class Sortsomething implements EntryPoint {
 				newQuiz.sortQuiz();
 
 				// Compare the two and find mistakes (if any)
+				//System.out.println("Mistakes BEFORE compare() = " + newQuiz.getMistakes());
 				int mistakes = newQuiz.compare();
+				//System.out.println("Mistakes AFTER compare() = " + mistakes);
 				if(mistakes > 0) {
 					mistakeLabel = new Label("Number of mistakes = " + mistakes);
 					mistakeLabel.addStyleName("yesMistakes");
@@ -123,7 +125,7 @@ public class Sortsomething implements EntryPoint {
 				}
 				
 				boundaryPanel.add(mistakeLabel);
-				//callNumberButtonExperiment();
+				callNumberButtonExperiment();
 			}
 		});
 		
@@ -150,7 +152,7 @@ public class Sortsomething implements EntryPoint {
 								cnb = new Button(newQuiz.callNums.get(i));
 								// TODO cnb.addStyleName("lineBreak");
 								cnPanel.add(cnb);
-								cnb.setPixelSize(60,70);								
+								cnb.setPixelSize(60,90);								
 								widgetDragController.makeDraggable(cnb);
 							}
 						}
@@ -193,26 +195,30 @@ public class Sortsomething implements EntryPoint {
 		System.out.println("*****USER SOLUTION*****\n"); 
 		for (int i = 0; i < numButtons; i++) {
 			Button ucnb = (Button) cnPanel.getWidget(i);
-			newQuiz.userCallNums.add(ucnb.getText());
-			System.out.println(ucnb.getText());
+			newQuiz.userCallNums.add( i, ucnb.getText()); // added index to i refills userCallNums from the start. Culprit behind the mistake reset bug
+			System.out.println(newQuiz.userCallNums.get(i));
 		}
 	}
 	
 	/* Experimental object oriented call number sorting
 	 * */
 	public void callNumberButtonExperiment() {
-		
-        CallNumberButton[] unsortedCnbs = new CallNumberButton[2];        
-        CallNumberButton[] sortedCnbs = new CallNumberButton[2];
+		int quizSize = newQuiz.callNums.size();
+		System.out.println("quizSize = " + quizSize + "\n");
+        CallNumberButton[] unsortedCnbs = new CallNumberButton[quizSize];        
+        CallNumberButton[] sortedCnbs = new CallNumberButton[quizSize];
         
         // Fill up the unsorted call number button array
-        for(int i = 0; i < newQuiz.callNums.size(); i++) {
-            unsortedCnbs[i] = new CallNumberButton(newQuiz.callNums.get(i));
+        for(int i = 0; i < quizSize; i++) {
+        	CallNumberButton cn = new CallNumberButton(newQuiz.callNums.get(i));
+            unsortedCnbs[i] = cn;
         }
-        
+        // Perform the sort
         for(int j = 0; j < unsortedCnbs.length - 1; j++) {
+        	System.out.println("Current j = " + j + "\n");
 	        sortedCnbs[j] = unsortedCnbs[j].compareLevels(unsortedCnbs[j+1]); // j+1 caused a null pointer
 	    }
+        // you're not filling the sortedCnbs array completely. Make
         
         // Print sorted call number array
         for(int j = 0; j < sortedCnbs.length; j++) {
