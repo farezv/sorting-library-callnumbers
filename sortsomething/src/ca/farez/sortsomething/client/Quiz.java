@@ -73,7 +73,6 @@ public class Quiz {
 			msg = "You have" + " mistakes!!";
 			this.mistakes = this.mistakes / 2;
 		}
-		// Window.alert(msg); // can use confirm() instead if returned boolean desired to close quiz
 		
 		return this.mistakes; // NEVER DIVIDED MISTAKES BY 2 BUT SIMPLY RETURNED IT!
 	}

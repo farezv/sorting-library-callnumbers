@@ -67,7 +67,7 @@ public class CallNumberButton extends Button {
 		char[] char2 = cnb2.levels[levelIndex].toCharArray();
 		
 		
-		if(levelIndex > 0) {
+		if(levelIndex > 0) { // Integers are considered as decimals at levels > 0
 			int i = 0;
 			
 			int max = 0;
@@ -76,11 +76,12 @@ public class CallNumberButton extends Button {
 				max = char1.length;
 			} else max = char2.length;
 			
-			// Compare the first character of this level
-			if (char1[i] == char2[i]) { // If they are equal, move on to subsequent number chars
+			// TODO Figure out a way to recognise the first numeric char
+			// Compare the first character of this level. If they are equal, move on to subsequent chars
+			if (char1[i] == char2[i]) {
 				
 				for(i = 1; i < max; i++) {
-					// Compare each subsequent (number) character
+					// Compare each subsequent character
 					
 					if(Character.toLowerCase(char1[i]) < Character.toLowerCase(char2[i])) {
 						return cnb1;
@@ -97,7 +98,7 @@ public class CallNumberButton extends Button {
 			}
 			
 		} else{
-			// Apply level0 aka sorting here!
+			// Apply level0 sorting here!
 		}
 		return cnb2;
 		

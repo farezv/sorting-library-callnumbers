@@ -208,21 +208,21 @@ public class Sortsomething implements EntryPoint {
         CallNumberButton[] unsortedCnbs = new CallNumberButton[quizSize];        
         CallNumberButton[] sortedCnbs = new CallNumberButton[quizSize];
         
-        // Fill up the unsorted call number button array
+        // Fill up the unsorted call number button array with partially sorted call number "clusters" from Arrays.sort()
         for(int i = 0; i < quizSize; i++) {
-        	CallNumberButton cn = new CallNumberButton(newQuiz.callNums.get(i));
+        	CallNumberButton cn = new CallNumberButton(newQuiz.sortedCallNums.get(i));
             unsortedCnbs[i] = cn;
         }
         // Perform the sort
         for(int j = 0; j < unsortedCnbs.length - 1; j++) {
-        	System.out.println("Current j = " + j + "\n");
+        	System.out.println(unsortedCnbs[j].getTitle() + ".compareLevels(" + unsortedCnbs[j+1].getTitle() + ")\n");
 	        sortedCnbs[j] = unsortedCnbs[j].compareLevels(unsortedCnbs[j+1]); // j+1 caused a null pointer
 	    }
         // you're not filling the sortedCnbs array completely. Make
         
         // Print sorted call number array
         for(int j = 0; j < sortedCnbs.length; j++) {
-	        System.out.println("Index " + j + " = " + sortedCnbs[j]);
+	        System.out.println("Index " + j + " = " + sortedCnbs[j].getTitle());
 	    }
 	}
 
