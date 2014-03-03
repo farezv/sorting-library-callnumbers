@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Button;
 public class CallNumberButton extends Button {
 
 	private String[] levels; // CallNumber broken into strings. For instance, "A100 TA2 2006" is ["A100" "TA2" "2006"]
+	private int rank;
 	
 	/* Constructor sets title and fills up the levels array
 	 * */
@@ -16,6 +17,8 @@ public class CallNumberButton extends Button {
 		for(int i = 0; i < levels.length; i++) {
 			System.out.println("Level " + i + " " + levels[i]);
 		}		
+	
+		rank = -1;
 	}
 
 	/* Compares the strings at levelIndex. Repeatedly called to assess the level of difference!
@@ -102,6 +105,12 @@ public class CallNumberButton extends Button {
 		}
 		return cnb2;
 		
+	}
+	
+	/*	Ranks each call number button within its bucket
+	 * */
+	public void setRank(int r) {
+		this.rank = r;
 	}
 }
 

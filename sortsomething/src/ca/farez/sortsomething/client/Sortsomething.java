@@ -109,9 +109,12 @@ public class Sortsomething implements EntryPoint {
 				int numOfButtons = cnPanel.getWidgetCount();
 				setUserOrder(numOfButtons);
 
-				// Get our computed solution
+				// Compute our inter-sorted (but not intra-sorted) buckets
 				newQuiz.sortQuiz();
-
+				
+				// Set the bucket indices for fine sorting later
+				newQuiz.setBucketIndices(newQuiz.callNums.size());
+				
 				// Compare the two and find mistakes (if any)
 				//System.out.println("Mistakes BEFORE compare() = " + newQuiz.getMistakes());
 				int mistakes = newQuiz.compare();
@@ -125,7 +128,7 @@ public class Sortsomething implements EntryPoint {
 				}
 				
 				boundaryPanel.add(mistakeLabel);
-				callNumberButtonExperiment();
+				newQuiz.callNumberButtonExperiment();
 			}
 		});
 		
@@ -198,32 +201,6 @@ public class Sortsomething implements EntryPoint {
 			newQuiz.userCallNums.add( i, ucnb.getText()); // added index to i refills userCallNums from the start. Culprit behind the mistake reset bug
 			System.out.println(newQuiz.userCallNums.get(i));
 		}
-	}
-	
-	/* Experimental object oriented call number sorting
-	 * */
-	public void callNumberButtonExperiment() {
-		int quizSize = newQuiz.callNums.size();
-		System.out.println("quizSize = " + quizSize + "\n");
-        CallNumberButton[] unsortedCnbs = new CallNumberButton[quizSize];        
-        CallNumberButton[] sortedCnbs = new CallNumberButton[quizSize];
-        
-        // Fill up the unsorted call number button array with partially sorted call number "clusters" from Arrays.sort()
-        for(int i = 0; i < quizSize; i++) {
-        	CallNumberButton cn = new CallNumberButton(newQuiz.sortedCallNums.get(i));
-            unsortedCnbs[i] = cn;
-        }
-        // Perform the sort
-        for(int j = 0; j < unsortedCnbs.length - 1; j++) {
-        	System.out.println(unsortedCnbs[j].getTitle() + ".compareLevels(" + unsortedCnbs[j+1].getTitle() + ")\n");
-	        sortedCnbs[j] = unsortedCnbs[j].compareLevels(unsortedCnbs[j+1]); // j+1 caused a null pointer
-	    }
-        // you're not filling the sortedCnbs array completely. Make
-        
-        // Print sorted call number array
-        for(int j = 0; j < sortedCnbs.length; j++) {
-	        System.out.println("Index " + j + " = " + sortedCnbs[j].getTitle());
-	    }
 	}
 
 }
