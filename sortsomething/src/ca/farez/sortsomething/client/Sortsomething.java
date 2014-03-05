@@ -109,11 +109,14 @@ public class Sortsomething implements EntryPoint {
 				int numOfButtons = cnPanel.getWidgetCount();
 				setUserOrder(numOfButtons);
 
-				// Compute our inter-sorted (but not intra-sorted) buckets
-				newQuiz.sortQuiz();
+				// Compute our inter-sorted buckets
+				newQuiz.builtInSortQuiz(); 				
 				
 				// Set the bucket indices for fine sorting later
 				newQuiz.setBucketIndices(newQuiz.callNums.size());
+				
+				// Compute our and intra-sorted buckets
+				newQuiz.callNumberIntraBucketSorting();
 				
 				// Compare the two and find mistakes (if any)
 				//System.out.println("Mistakes BEFORE compare() = " + newQuiz.getMistakes());
@@ -128,7 +131,6 @@ public class Sortsomething implements EntryPoint {
 				}
 				
 				boundaryPanel.add(mistakeLabel);
-				newQuiz.callNumberButtonExperiment();
 			}
 		});
 		

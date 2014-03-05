@@ -15,7 +15,7 @@ public class CallNumberButton extends Button {
 		levels = string.split("\\s+"); // splitting by whitespace
 		// ^^^ YOURE DECLARING IT AGAIN YOU FOOL!!
 		for(int i = 0; i < levels.length; i++) {
-			System.out.println("Level " + i + " " + levels[i]);
+			//System.out.println("Level " + i + " " + levels[i]);
 		}		
 	
 		rank = -1;
@@ -101,7 +101,7 @@ public class CallNumberButton extends Button {
 			}
 			
 		} else{
-			// Apply level0 sorting here!
+			// TODO Apply level0 sorting here!
 		}
 		return cnb2;
 		

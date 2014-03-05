@@ -22,6 +22,7 @@ public class Quiz {
 	public ArrayList<String> userCallNums = new ArrayList<String>(); // User's solution, maybe sorted or unsorted
 	private int mistakes; // Difference between our solution and user's
 	public ArrayList<Integer> bucketIndices = new ArrayList<Integer>(); // Used to fine sort individual buckets later
+	CallNumberButton[] bucketSortedCnbs;
 	private int attempts;
 	
 	public Quiz() {		
@@ -34,7 +35,7 @@ public class Quiz {
 	
 	/* Sorting call number strings. Brace yourself. Winter is coming!
 	 * */
-	public void sortQuiz() {
+	public void builtInSortQuiz() {
 		
 		String[] cnums = new String[callNums.size()];
 		for(int i = 0; i < cnums.length; i++) {
@@ -42,7 +43,7 @@ public class Quiz {
 		}
 
 		Arrays.sort(cnums); // This sorts based on the first integer found
-		System.out.println("*****SORTED SOLUTION*****\n");
+		System.out.println("\n*****SORTED SOLUTION*****\n");
 		for(int i = 0; i < cnums.length; i++) {
 			System.out.println(cnums[i]);
 			sortedCallNums.add(i, cnums[i]);
@@ -57,9 +58,9 @@ public class Quiz {
 	public int compare() {
 		
 		this.mistakes = 0;
-		System.out.println("*****COMPARE SOLUTIONS*****\n"); 
-		for(int i = 0; i < sortedCallNums.size(); i++) {
-			if(!sortedCallNums.get(i).equals(userCallNums.get(i))) {
+		System.out.println("\n*****COMPARE SOLUTIONS*****\n"); 
+		for(int i = 0; i < bucketSortedCnbs.length; i++) {
+			if(!bucketSortedCnbs[i].getTitle().equals(userCallNums.get(i))) {
 				// These comparisons are failing after you make a mistake once.
 				this.mistakes++;
 				System.out.println("MISTAKES INCREMENTED\n" + sortedCallNums.get(i) + " vs " + userCallNums.get(i));
@@ -81,7 +82,7 @@ public class Quiz {
 	 * */
 	public int populate(String string) {
 		int newCallNums = 0; // keeps track of any new call numbers added to the textArea
-		System.out.println("****Populating Quiz****\n");
+		System.out.println("\n****Populating Quiz****\n");
 		// This is how a large input string turns into smaller call number strings.
 		String input[] = string.split("\n");
 		
@@ -120,12 +121,26 @@ public class Quiz {
 	/*	Sets indices in the bucket indices array to help with fine sorting the buckets later
 	 * */
 	public void setBucketIndices(int size) {
-		int first = 0;
-		this.bucketIndices.add(first); // First index is always zero
-		System.out.println("*****SETTING BUCKET INDICES*****\n");
+		int charindex = 0;
+		this.bucketIndices.add(charindex); // First index is always zero		
+		System.out.println("\n*****SETTING BUCKET INDICES*****\n" + "BucketIndex " + charindex);
+		
 		for(int i = 1; i < size; i++) {
-			char a = sortedCallNums.get(i - 1).charAt(first);
-			char b = sortedCallNums.get(i).charAt(first);
+			
+			char a = sortedCallNums.get(i - 1).charAt(charindex);
+			char b = sortedCallNums.get(i).charAt(charindex);
+			while(Character.toLowerCase(a) == Character.toLowerCase(b) && 
+				  charindex < Math.min(sortedCallNums.get(i).length(), sortedCallNums.get(i-1).length())) {
+				// check to see if chars are equal, if so, move on to the next char
+				// TODO deal with number to alphabet comparisons
+				charindex++;
+				if(charindex < sortedCallNums.get(i - 1).length()) {
+					a = sortedCallNums.get(i - 1).charAt(charindex);
+				}
+				if(charindex < sortedCallNums.get(i).length()) {
+					b = sortedCallNums.get(i).charAt(charindex);
+				}				
+			}
 			if (Character.toLowerCase(a) < Character.toLowerCase(b) ) {
 				this.bucketIndices.add(i);
 				System.out.println("BucketIndex " + i);
@@ -135,11 +150,11 @@ public class Quiz {
 	
 	/* Experimental object oriented call number sorting
 	 * */
-	public void callNumberButtonExperiment() {
+	public void callNumberIntraBucketSorting() {
 		int quizSize = this.callNums.size();
 		System.out.println("quizSize = " + quizSize + "\n");
         CallNumberButton[] unsortedCnbs = new CallNumberButton[quizSize];        
-        CallNumberButton[] sortedCnbs = new CallNumberButton[quizSize];
+        bucketSortedCnbs = new CallNumberButton[quizSize];
         CallNumberButton alphabeticallyEarlier;
         
         // Fill up the unsorted call number button array with partially sorted call number "clusters" from Arrays.sort()
@@ -158,11 +173,17 @@ public class Quiz {
         		bucketSize = this.sortedCallNums.size() - bucketIndices.get(i);
         	} else bucketSize = bucketIndices.get(i + 1); // The next index indicates bucket size
 	        
-        	System.out.println("bucketSize is" + bucketSize);
+        	System.out.println("bucketSize is " + bucketSize);
         	
-        	for(int j = i; j < bucketSize; j++) { // For each call number
-        		int rank = 0;
-        		for(int k = j + 1; k < bucketSize; k++) { // Compare it to every other call number
+        	for(int j = bucketIndices.get(i); j < bucketSize + bucketIndices.get(i); j++) { // For each call number
+        		int k_index = bucketIndices.get(i) + bucketSize - 1;
+        		int rank = bucketIndices.get(i);
+        		
+//        		if(i == bucketIndices.size() - 1) { 	 // If we're on the last bucket
+//        			k_index = this.sortedCallNums.size() - 1; // make k_index equal the last index in the unsorted list
+//        		} else k_index = bucketIndices.get(i + 1) - 1;
+        		
+        		for(int k = k_index; k > j; k--) { // Compare it to every other call number
 	        		System.out.println(unsortedCnbs[j].getTitle() + ".compareLevels(" + unsortedCnbs[k].getTitle() + ")\n");
 	        		alphabeticallyEarlier = unsortedCnbs[j].compareLevels(unsortedCnbs[k]);
 			        
@@ -171,13 +192,13 @@ public class Quiz {
 			        }	
         		}
 	        	// once we're finished increasing the rank, place the j call number in the sorted array
-        		sortedCnbs[rank] = unsortedCnbs[j];
+        		bucketSortedCnbs[rank] = unsortedCnbs[j];
 		    } // move on to the next j.
         }
         
         // Print sorted call number array TODO FIX BUG WHERE THE FIRST CN NEVER GETS PUT INTO ARRAY
-        for(int j = 0; j < sortedCnbs.length - 1; j++) {
-	        System.out.println("Index " + j + " = " + sortedCnbs[j].getTitle());
+        for(int j = 0; j < bucketSortedCnbs.length; j++) {
+	        System.out.println("Index " + j + " = " + bucketSortedCnbs[j].getTitle());
 	    }
 	}
 }
