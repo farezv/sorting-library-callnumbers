@@ -56,10 +56,73 @@ public class CallNumberButton extends Button {
 		if(i == max) {
 			return this; 
 		} else {
-			return compareChars(this,cnb,i); //	
+			return regexSort(this,cnb,i);
+			//return compareChars(this,cnb,i); //	
 		}
 	}
 
+	/*	Uses regular expressions to extract out the alphabet and numerics and sorts them separately
+	 * */
+	public CallNumberButton regexSort(CallNumberButton cnb1, CallNumberButton cnb2, int levelIndex) {
+		
+		// Extract alphabet from the call number level
+		String cn1Alpha = cnb1.levels[levelIndex].replaceAll("[^a-zA-Z]", "");
+		String cn2Alpha = cnb2.levels[levelIndex].replaceAll("[^a-zA-Z]", "");
+		
+		// Extract numerics from the call number level
+		String cn1Num = cnb1.levels[levelIndex].replaceAll("[^\\d.]", "");
+		String cn2Num = cnb2.levels[levelIndex].replaceAll("[^\\d.]", "");
+		
+		int cNum1 = Integer.parseInt(cn1Num);
+		int cNum2 = Integer.parseInt(cn2Num);
+		
+		if(levelIndex > 0) {
+			
+			// Decimal sort
+			
+			// First sort the alphabet
+			int stringEqual = cn1Alpha.compareToIgnoreCase(cn2Alpha);
+			
+			if(stringEqual < 0) {
+				return cnb1;
+			} else if(stringEqual > 0) {
+				return cnb2;
+			} else {
+			
+			// Compare the numbers if the alphabet are equal
+			// Converting whole integers into decimals
+			int divisor = cn1Num.toCharArray().length;
+			cNum1 = cNum1 / (10 ^ divisor); // 1234 becomes 0.1234
+			
+			divisor = cn2Num.toCharArray().length;
+			cNum2 = cNum2 / (10 ^ divisor);
+			
+			if(cNum1 < cNum2) {
+				return cnb1;
+			} else return cnb2;
+			
+			}
+		} else {
+			
+			// Integer sort
+						
+			// First sort the alphabet
+			int stringEqual = cn1Alpha.compareToIgnoreCase(cn2Alpha);
+				
+			if(stringEqual < 0) {
+				return cnb1;
+			} else if(stringEqual > 0) {
+				return cnb2;
+			} else {
+				
+				// Compare integers
+				if(cNum1 < cNum2) {
+					return cnb1;
+				} else return cnb2;				
+			}
+		}
+	}
+	
 	/* Compares individual characters based on the level being considered
 	 * 
 	 * Returns the alphabetically earlier call number

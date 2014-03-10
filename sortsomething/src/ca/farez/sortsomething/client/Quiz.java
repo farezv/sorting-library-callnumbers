@@ -129,18 +129,18 @@ public class Quiz {
 			
 			char a = sortedCallNums.get(i - 1).charAt(charindex);
 			char b = sortedCallNums.get(i).charAt(charindex);
-			while(Character.toLowerCase(a) == Character.toLowerCase(b) && 
-				  charindex < Math.min(sortedCallNums.get(i).length(), sortedCallNums.get(i-1).length())) {
-				// check to see if chars are equal, if so, move on to the next char
-				// TODO deal with number to alphabet comparisons
-				charindex++;
-				if(charindex < sortedCallNums.get(i - 1).length()) {
-					a = sortedCallNums.get(i - 1).charAt(charindex);
-				}
-				if(charindex < sortedCallNums.get(i).length()) {
-					b = sortedCallNums.get(i).charAt(charindex);
-				}				
-			}
+//			while(Character.toLowerCase(a) == Character.toLowerCase(b) && 
+//				  charindex < Math.min(sortedCallNums.get(i).length(), sortedCallNums.get(i-1).length())) {
+//				// check to see if chars are equal, if so, move on to the next char
+//				// TODO deal with number to alphabet comparisons
+//				charindex++;
+//				if(charindex < sortedCallNums.get(i - 1).length()) {
+//					a = sortedCallNums.get(i - 1).charAt(charindex);
+//				}
+//				if(charindex < sortedCallNums.get(i).length()) {
+//					b = sortedCallNums.get(i).charAt(charindex);
+//				}				
+//			}
 			if (Character.toLowerCase(a) < Character.toLowerCase(b) ) {
 				this.bucketIndices.add(i);
 				System.out.println("BucketIndex " + i);
@@ -175,13 +175,13 @@ public class Quiz {
 	        
         	System.out.println("bucketSize is " + bucketSize);
         	
-        	for(int j = bucketIndices.get(i); j < bucketSize + bucketIndices.get(i); j++) { // For each call number
+        	for(int j = bucketIndices.get(i); j < bucketSize + bucketIndices.get(i) - 1; j++) { // For each call number
         		int k_index = bucketIndices.get(i) + bucketSize - 1;
         		int rank = bucketIndices.get(i);
         		
-//        		if(i == bucketIndices.size() - 1) { 	 // If we're on the last bucket
-//        			k_index = this.sortedCallNums.size() - 1; // make k_index equal the last index in the unsorted list
-//        		} else k_index = bucketIndices.get(i + 1) - 1;
+        		if(i == bucketIndices.size() - 1) { 	 // If we're on the last bucket
+        			k_index = this.sortedCallNums.size() - 1; // make k_index equal the last index in the unsorted list
+        		} else k_index = bucketIndices.get(i + 1) - 1;
         		
         		for(int k = k_index; k > j; k--) { // Compare it to every other call number
 	        		System.out.println(unsortedCnbs[j].getTitle() + ".compareLevels(" + unsortedCnbs[k].getTitle() + ")\n");
@@ -198,7 +198,7 @@ public class Quiz {
         
         // Print sorted call number array TODO FIX BUG WHERE THE FIRST CN NEVER GETS PUT INTO ARRAY
         for(int j = 0; j < bucketSortedCnbs.length; j++) {
-	        System.out.println("Index " + j + " = " + bucketSortedCnbs[j].getTitle());
+	        //System.out.println("Index " + j + " = " + bucketSortedCnbs[j].getTitle());
 	    }
 	}
 }
