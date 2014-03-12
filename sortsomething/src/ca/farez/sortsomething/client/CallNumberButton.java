@@ -170,10 +170,16 @@ public class CallNumberButton extends Button {
 		
 	}
 	
-	/*	Ranks each call number button within its bucket
+	/*	Sets the provided rank for call number button
 	 * */
 	public void setRank(int r) {
 		this.rank = r;
+	}
+
+	/*	Gets the CN's rank
+	 * */
+	public int getRank() {
+		return this.rank;
 	}
 }
 

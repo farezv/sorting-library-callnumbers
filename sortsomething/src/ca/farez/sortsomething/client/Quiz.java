@@ -60,6 +60,9 @@ public class Quiz {
 		this.mistakes = 0;
 		System.out.println("\n*****COMPARE SOLUTIONS*****\n"); 
 		for(int i = 0; i < bucketSortedCnbs.length; i++) {
+			if(bucketSortedCnbs[i] == null) {
+        		topMenErrorMsg("Whoops! Cleanup in aisle " + i + "! \nHighly advanced janitor monkeys dispatched!");
+        	} else
 			if(!bucketSortedCnbs[i].getTitle().equals(userCallNums.get(i))) {
 				// These comparisons are failing after you make a mistake once.
 				this.mistakes++;
@@ -175,7 +178,7 @@ public class Quiz {
 	        
         	System.out.println("bucketSize is " + bucketSize);
         	
-        	for(int j = bucketIndices.get(i); j < bucketSize + bucketIndices.get(i) - 1; j++) { // For each call number
+        	for(int j = bucketIndices.get(i); j < bucketSize + bucketIndices.get(i); j++) { // For each call number
         		int k_index = bucketIndices.get(i) + bucketSize - 1;
         		int rank = bucketIndices.get(i);
         		
@@ -188,17 +191,25 @@ public class Quiz {
 	        		alphabeticallyEarlier = unsortedCnbs[j].compareLevels(unsortedCnbs[k]);
 			        
 			        if(alphabeticallyEarlier == unsortedCnbs[k]) { // If the alphabetically earlier call number is k
-			        	unsortedCnbs[j].setRank(rank++); // then increase j's rank
-			        }	
+			        	unsortedCnbs[j].setRank(rank++); // then increase j's rank, otherwise set its rank to j
+			        } else unsortedCnbs[j].setRank(j);	 // This prevents sorted CNs from all writing to rank = bucketIndices.get(i)
         		}
-	        	// once we're finished increasing the rank, place the j call number in the sorted array
-        		bucketSortedCnbs[rank] = unsortedCnbs[j];
+	        	// Once we're finished increasing the rank, place the j call number in the sorted array
+        		// Making sure the last call number's rank is set because it skipped the k loop
+        		if(j == bucketSize + bucketIndices.get(i) - 1) unsortedCnbs[j].setRank(j); 
+        		bucketSortedCnbs[unsortedCnbs[j].getRank()] = unsortedCnbs[j];
 		    } // move on to the next j.
         }
         
-        // Print sorted call number array TODO FIX BUG WHERE THE FIRST CN NEVER GETS PUT INTO ARRAY
+        // Print sorted call number array
         for(int j = 0; j < bucketSortedCnbs.length; j++) {
-	        //System.out.println("Index " + j + " = " + bucketSortedCnbs[j].getTitle());
+        	if(bucketSortedCnbs[j] == null) {
+        		topMenErrorMsg("Whoops! Cleanup in aisle " + j + "! \nHighly advanced janitor monkeys dispatched!");
+        	} else System.out.println("Index " + j + " = " + bucketSortedCnbs[j].getTitle());
 	    }
+	}
+	
+	public void topMenErrorMsg(String msg) {
+		Window.alert(msg);
 	}
 }
