@@ -18,11 +18,15 @@ import com.google.gwt.user.client.ui.Button;
 public class Quiz {
 	
 	public ArrayList<String> callNums = new ArrayList<String>(); // Quiz input, maybe sorted or unsorted
-	public ArrayList<String> sortedCallNums = new ArrayList<String>(); // Our solution, should be sorted
+	public ArrayList<String> sortedCallNums = new ArrayList<String>(); // Built-in sorted solution
 	public ArrayList<String> userCallNums = new ArrayList<String>(); // User's solution, maybe sorted or unsorted
 	private int mistakes; // Difference between our solution and user's
+	
 	public ArrayList<Integer> bucketIndices = new ArrayList<Integer>(); // Used to fine sort individual buckets later
 	CallNumberButton[] bucketSortedCnbs;
+	// Two dimensional array list of array lists. The first indexes through buckets. Each bucket contains an ArrayList of Call Number Buttons
+	public ArrayList<ArrayList<CallNumberButton>> bucketCollection = new ArrayList<ArrayList<CallNumberButton>>();
+	
 	private int attempts;
 	
 	public Quiz() {		
@@ -123,29 +127,26 @@ public class Quiz {
 	
 	/*	Sets indices in the bucket indices array to help with fine sorting the buckets later
 	 * */
-	public void setBucketIndices(int size) {
-		int charindex = 0;
-		this.bucketIndices.add(charindex); // First index is always zero		
-		System.out.println("\n*****SETTING BUCKET INDICES*****\n" + "BucketIndex " + charindex);
+	public void fillBucketCollection(int size) {
+		int firstLetter = 0;
+		int bucketAtIndex = 0;
+		System.out.println("\n*****SETTING BUCKET INDICES*****\n" + "BucketIndex " + firstLetter);
 		
 		for(int i = 1; i < size; i++) {
 			
-			char a = sortedCallNums.get(i - 1).charAt(charindex);
-			char b = sortedCallNums.get(i).charAt(charindex);
-//			while(Character.toLowerCase(a) == Character.toLowerCase(b) && 
-//				  charindex < Math.min(sortedCallNums.get(i).length(), sortedCallNums.get(i-1).length())) {
-//				// check to see if chars are equal, if so, move on to the next char
-//				// TODO deal with number to alphabet comparisons
-//				charindex++;
-//				if(charindex < sortedCallNums.get(i - 1).length()) {
-//					a = sortedCallNums.get(i - 1).charAt(charindex);
-//				}
-//				if(charindex < sortedCallNums.get(i).length()) {
-//					b = sortedCallNums.get(i).charAt(charindex);
-//				}				
-//			}
-			if (Character.toLowerCase(a) < Character.toLowerCase(b) ) {
-				this.bucketIndices.add(i);
+			CallNumberButton A = new CallNumberButton(this.sortedCallNums.get(i - 1));
+			CallNumberButton B = new CallNumberButton(this.sortedCallNums.get(i));
+			char a = A.getTitle().charAt(firstLetter);
+			char b = B.getTitle().charAt(firstLetter);
+			
+			// If the first characters of two call numbers are equal, create a button for the left CN, and add it to the bucket
+			if (Character.toLowerCase(a) == Character.toLowerCase(b)) {				
+				this.bucketCollection.get(bucketAtIndex).add(A);
+			}
+			
+			if (Character.toLowerCase(a) < Character.toLowerCase(b) ) {				
+				this.bucketCollection.get(bucketAtIndex).add(A);
+				bucketAtIndex++; // Move on to the next bucket since we've come to the "boundary" of 2 buckets
 				System.out.println("BucketIndex " + i);
 			}
 		}
@@ -196,7 +197,7 @@ public class Quiz {
         		}
 	        	// Once we're finished increasing the rank, place the j call number in the sorted array
         		// Making sure the last call number's rank is set because it skipped the k loop
-        		if(j == bucketSize + bucketIndices.get(i) - 1) unsortedCnbs[j].setRank(j); 
+        		if(j == bucketSize + bucketIndices.get(i) - 1) unsortedCnbs[j].setRank(j);
         		bucketSortedCnbs[unsortedCnbs[j].getRank()] = unsortedCnbs[j];
 		    } // move on to the next j.
         }

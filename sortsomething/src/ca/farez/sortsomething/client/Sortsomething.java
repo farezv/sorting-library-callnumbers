@@ -113,7 +113,7 @@ public class Sortsomething implements EntryPoint {
 				newQuiz.builtInSortQuiz(); 				
 				
 				// Set the bucket indices for fine sorting later
-				newQuiz.setBucketIndices(newQuiz.callNums.size());
+				newQuiz.fillBucketCollection(newQuiz.callNums.size());
 				
 				// Compute our and intra-sorted buckets
 				newQuiz.callNumberIntraBucketSorting();
