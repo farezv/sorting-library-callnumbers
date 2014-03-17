@@ -114,6 +114,7 @@ public class Sortsomething implements EntryPoint {
 				
 				// Set the bucket indices for fine sorting later
 				newQuiz.fillBucketCollection(newQuiz.callNums.size());
+				newQuiz.printBucketCollection();
 				
 				// Compute our and intra-sorted buckets
 				newQuiz.callNumberIntraBucketSorting();
@@ -200,7 +201,7 @@ public class Sortsomething implements EntryPoint {
 		System.out.println("*****USER SOLUTION*****\n"); 
 		for (int i = 0; i < numButtons; i++) {
 			Button ucnb = (Button) cnPanel.getWidget(i);
-			newQuiz.userCallNums.add( i, ucnb.getText()); // added index to i refills userCallNums from the start. Culprit behind the mistake reset bug
+			newQuiz.userCallNums.add( i, ucnb.getText());
 			System.out.println(newQuiz.userCallNums.get(i));
 		}
 	}

@@ -30,7 +30,7 @@ public class CallNumberButton extends Button {
 	
 	/* Returns the "alphabetically earlier" call number after comparing each level
 	 * */
-	public CallNumberButton compareLevels(CallNumberButton cnb) {
+	public CallNumberButton compareCallNumbers(CallNumberButton cnb) {
 		
 		CallNumberButton[] sorted;
 		int max = 0; // Smaller of the two call number levels to avoid null pointer exceptions

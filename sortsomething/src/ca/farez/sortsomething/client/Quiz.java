@@ -23,7 +23,7 @@ public class Quiz {
 	private int mistakes; // Difference between our solution and user's
 	
 	public ArrayList<Integer> bucketIndices = new ArrayList<Integer>(); // Used to fine sort individual buckets later
-	CallNumberButton[] bucketSortedCnbs;
+	public ArrayList<CallNumberButton> bucketSortedCnbs;
 	// Two dimensional array list of array lists. The first indexes through buckets. Each bucket contains an ArrayList of Call Number Buttons
 	public ArrayList<ArrayList<CallNumberButton>> bucketCollection = new ArrayList<ArrayList<CallNumberButton>>();
 	
@@ -63,11 +63,11 @@ public class Quiz {
 		
 		this.mistakes = 0;
 		System.out.println("\n*****COMPARE SOLUTIONS*****\n"); 
-		for(int i = 0; i < bucketSortedCnbs.length; i++) {
-			if(bucketSortedCnbs[i] == null) {
+		for(int i = 0; i < bucketSortedCnbs.size(); i++) {
+			if(bucketSortedCnbs.get(i) == null) {
         		topMenErrorMsg("Whoops! Cleanup in aisle " + i + "! \nHighly advanced janitor monkeys dispatched!");
         	} else
-			if(!bucketSortedCnbs[i].getTitle().equals(userCallNums.get(i))) {
+			if(!bucketSortedCnbs.get(i).getTitle().equals(userCallNums.get(i))) {
 				// These comparisons are failing after you make a mistake once.
 				this.mistakes++;
 				System.out.println("MISTAKES INCREMENTED\n" + sortedCallNums.get(i) + " vs " + userCallNums.get(i));
@@ -130,7 +130,10 @@ public class Quiz {
 	public void fillBucketCollection(int size) {
 		int firstLetter = 0;
 		int bucketAtIndex = 0;
-		System.out.println("\n*****SETTING BUCKET INDICES*****\n" + "BucketIndex " + firstLetter);
+		System.out.println("\n*****SETTING BUCKET INDICES*****\n");
+		
+		ArrayList<CallNumberButton> cnbal = new ArrayList<CallNumberButton>();
+		this.bucketCollection.add(cnbal);
 		
 		for(int i = 1; i < size; i++) {
 			
@@ -146,8 +149,21 @@ public class Quiz {
 			
 			if (Character.toLowerCase(a) < Character.toLowerCase(b) ) {				
 				this.bucketCollection.get(bucketAtIndex).add(A);
-				bucketAtIndex++; // Move on to the next bucket since we've come to the "boundary" of 2 buckets
-				System.out.println("BucketIndex " + i);
+				// Initialise the next bucket since we've come to the "boundary" of 2 buckets
+				cnbal = new ArrayList<CallNumberButton>();
+				this.bucketCollection.add(cnbal);
+				bucketAtIndex++;
+			}
+		}
+	}
+	
+	/*	Print BucketCollection
+	 * */
+	public void printBucketCollection() {
+		for(int i = 0; i < this.bucketCollection.size(); i++) {
+			System.out.println("Bucket Index " + i);
+			for(int j = 0; j < this.bucketCollection.get(i).size(); j++) {
+				System.out.println("	" + this.bucketCollection.get(i).get(j).getTitle());
 			}
 		}
 	}
@@ -155,58 +171,39 @@ public class Quiz {
 	/* Experimental object oriented call number sorting
 	 * */
 	public void callNumberIntraBucketSorting() {
-		int quizSize = this.callNums.size();
-		System.out.println("quizSize = " + quizSize + "\n");
-        CallNumberButton[] unsortedCnbs = new CallNumberButton[quizSize];        
-        bucketSortedCnbs = new CallNumberButton[quizSize];
-        CallNumberButton alphabeticallyEarlier;
-        
-        // Fill up the unsorted call number button array with partially sorted call number "clusters" from Arrays.sort()
-        for(int i = 0; i < quizSize; i++) {
-        	CallNumberButton cn = new CallNumberButton(this.sortedCallNums.get(i));
-            unsortedCnbs[i] = cn;
-        }
-        
+		
+		int rank;
+		CallNumberButton alphabeticallyEarlier;
+                
         // Perform the "fine" sort. This is O(n^2).
-        for(int i = 0; i < this.bucketIndices.size(); i++) { // For each bucket
+        for(int i = 0; i < this.bucketCollection.size(); i++) { // For each bucket
         	
-        	// Set the bucket size for each bucket
-        	int bucketSize;
-        	// The last bucket size is the difference between the last bucket index and the size of the quiz
-        	if(i == this.bucketIndices.size() - 1) {
-        		bucketSize = this.sortedCallNums.size() - bucketIndices.get(i);
-        	} else bucketSize = bucketIndices.get(i + 1); // The next index indicates bucket size
-	        
-        	System.out.println("bucketSize is " + bucketSize);
         	
-        	for(int j = bucketIndices.get(i); j < bucketSize + bucketIndices.get(i); j++) { // For each call number
-        		int k_index = bucketIndices.get(i) + bucketSize - 1;
-        		int rank = bucketIndices.get(i);
-        		
-        		if(i == bucketIndices.size() - 1) { 	 // If we're on the last bucket
-        			k_index = this.sortedCallNums.size() - 1; // make k_index equal the last index in the unsorted list
-        		} else k_index = bucketIndices.get(i + 1) - 1;
-        		
-        		for(int k = k_index; k > j; k--) { // Compare it to every other call number
-	        		System.out.println(unsortedCnbs[j].getTitle() + ".compareLevels(" + unsortedCnbs[k].getTitle() + ")\n");
-	        		alphabeticallyEarlier = unsortedCnbs[j].compareLevels(unsortedCnbs[k]);
-			        
-			        if(alphabeticallyEarlier == unsortedCnbs[k]) { // If the alphabetically earlier call number is k
-			        	unsortedCnbs[j].setRank(rank++); // then increase j's rank, otherwise set its rank to j
-			        } else unsortedCnbs[j].setRank(j);	 // This prevents sorted CNs from all writing to rank = bucketIndices.get(i)
+        	ArrayList<CallNumberButton> cnbal = this.bucketCollection.get(i);
+        	
+        	for(int j = 0; j < cnbal.size(); j++) {
+        		rank = 0;
+        		for(int k = cnbal.size() - 1; k > j; k--) {
+        			System.out.println(cnbal.get(j).getTitle() + ".compareLevels(" + cnbal.get(k).getTitle() + ")\n");
+        			alphabeticallyEarlier = cnbal.get(j).compareCallNumbers(cnbal.get(k));
+        			if(alphabeticallyEarlier == cnbal.get(k)) {
+        				cnbal.get(k).setRank(0);
+        				cnbal.get(j).setRank(++rank);
+        			} else {
+        				cnbal.get(j).setRank(rank);
+        				cnbal.get(k).setRank(++rank);
+        			}
         		}
-	        	// Once we're finished increasing the rank, place the j call number in the sorted array
-        		// Making sure the last call number's rank is set because it skipped the k loop
-        		if(j == bucketSize + bucketIndices.get(i) - 1) unsortedCnbs[j].setRank(j);
-        		bucketSortedCnbs[unsortedCnbs[j].getRank()] = unsortedCnbs[j];
-		    } // move on to the next j.
+        	   		
+        		
+        	}
         }
         
         // Print sorted call number array
-        for(int j = 0; j < bucketSortedCnbs.length; j++) {
-        	if(bucketSortedCnbs[j] == null) {
+        for(int j = 0; j < bucketSortedCnbs.size(); j++) {
+        	if(bucketSortedCnbs.get(j) == null) {
         		topMenErrorMsg("Whoops! Cleanup in aisle " + j + "! \nHighly advanced janitor monkeys dispatched!");
-        	} else System.out.println("Index " + j + " = " + bucketSortedCnbs[j].getTitle());
+        	} else System.out.println("Index " + j + " = " + bucketSortedCnbs.get(j).getTitle());
 	    }
 	}
 	
