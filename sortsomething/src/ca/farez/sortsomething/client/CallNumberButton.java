@@ -18,7 +18,7 @@ public class CallNumberButton extends Button {
 			//System.out.println("Level " + i + " " + levels[i]);
 		}		
 	
-		rank = -1;
+		rank = 0;
 	}
 
 	/* Compares the strings at levelIndex. Repeatedly called to assess the level of difference!
@@ -49,7 +49,7 @@ public class CallNumberButton extends Button {
 		 * Level 2 doesn't match. Now we compare characters at level 2
 		 */
 		int i = 0;
-		while(this.isLevelEqual(cnb, i) && i != max) {
+		while(this.isLevelEqual(cnb, i) && i <= max) {
 			i++;
 		}
 		
@@ -76,7 +76,10 @@ public class CallNumberButton extends Button {
 		int cNum1 = Integer.parseInt(cn1Num);
 		int cNum2 = Integer.parseInt(cn2Num);
 		
-		if(levelIndex > 0) {
+		int maxLevelCN1 = cnb1.levels.length - 1;
+		int maxLevelCN2 = cnb2.levels.length - 1;
+		
+		if(levelIndex > 0 && (levelIndex < maxLevelCN1 || levelIndex < maxLevelCN2)) {
 			
 			// Decimal sort
 			

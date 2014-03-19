@@ -23,7 +23,7 @@ public class Quiz {
 	private int mistakes; // Difference between our solution and user's
 	
 	public ArrayList<Integer> bucketIndices = new ArrayList<Integer>(); // Used to fine sort individual buckets later
-	public ArrayList<CallNumberButton> bucketSortedCnbs;
+	CallNumberButton[] bucketSortedCnbs;
 	// Two dimensional array list of array lists. The first indexes through buckets. Each bucket contains an ArrayList of Call Number Buttons
 	public ArrayList<ArrayList<CallNumberButton>> bucketCollection = new ArrayList<ArrayList<CallNumberButton>>();
 	
@@ -63,11 +63,11 @@ public class Quiz {
 		
 		this.mistakes = 0;
 		System.out.println("\n*****COMPARE SOLUTIONS*****\n"); 
-		for(int i = 0; i < bucketSortedCnbs.size(); i++) {
-			if(bucketSortedCnbs.get(i) == null) {
+		for(int i = 0; i < bucketSortedCnbs.length; i++) {
+			if(bucketSortedCnbs[i] == null) {
         		topMenErrorMsg("Whoops! Cleanup in aisle " + i + "! \nHighly advanced janitor monkeys dispatched!");
         	} else
-			if(!bucketSortedCnbs.get(i).getTitle().equals(userCallNums.get(i))) {
+			if(!bucketSortedCnbs[i].getTitle().equals(userCallNums.get(i))) {
 				// These comparisons are failing after you make a mistake once.
 				this.mistakes++;
 				System.out.println("MISTAKES INCREMENTED\n" + sortedCallNums.get(i) + " vs " + userCallNums.get(i));
@@ -106,6 +106,7 @@ public class Quiz {
 					newCallNums++;
 			}
 		}
+		this.bucketSortedCnbs = new CallNumberButton[callNums.size()];
 		return newCallNums;
 	}
 
@@ -145,14 +146,16 @@ public class Quiz {
 			// If the first characters of two call numbers are equal, create a button for the left CN, and add it to the bucket
 			if (Character.toLowerCase(a) == Character.toLowerCase(b)) {				
 				this.bucketCollection.get(bucketAtIndex).add(A);
-			}
-			
+			} else			
 			if (Character.toLowerCase(a) < Character.toLowerCase(b) ) {				
 				this.bucketCollection.get(bucketAtIndex).add(A);
 				// Initialise the next bucket since we've come to the "boundary" of 2 buckets
 				cnbal = new ArrayList<CallNumberButton>();
 				this.bucketCollection.add(cnbal);
 				bucketAtIndex++;
+			}
+			if(i == size - 1) {
+				this.bucketCollection.get(bucketAtIndex).add(B);
 			}
 		}
 	}
@@ -177,37 +180,46 @@ public class Quiz {
                 
         // Perform the "fine" sort. This is O(n^2).
         for(int i = 0; i < this.bucketCollection.size(); i++) { // For each bucket
-        	
-        	
-        	ArrayList<CallNumberButton> cnbal = this.bucketCollection.get(i);
-        	
-        	for(int j = 0; j < cnbal.size(); j++) {
-        		rank = 0;
-        		for(int k = cnbal.size() - 1; k > j; k--) {
-        			System.out.println(cnbal.get(j).getTitle() + ".compareLevels(" + cnbal.get(k).getTitle() + ")\n");
-        			alphabeticallyEarlier = cnbal.get(j).compareCallNumbers(cnbal.get(k));
-        			if(alphabeticallyEarlier == cnbal.get(k)) {
-        				cnbal.get(k).setRank(0);
-        				cnbal.get(j).setRank(++rank);
-        			} else {
-        				cnbal.get(j).setRank(rank);
-        				cnbal.get(k).setRank(++rank);
-        			}
-        		}
-        	   		
+        	        	
+        	for(int j = 0; j < this.bucketCollection.get(i).size(); j++) {
         		
+        		for(int k = this.bucketCollection.get(i).size() - 1; k > j; k--) {
+        			System.out.println(this.bucketCollection.get(i).get(j).getTitle() + ".compareLevels(" + this.bucketCollection.get(i).get(k).getTitle() + ")\n");
+        			alphabeticallyEarlier = this.bucketCollection.get(i).get(j).compareCallNumbers(this.bucketCollection.get(i).get(k));
+        			if(alphabeticallyEarlier == this.bucketCollection.get(i).get(k)) {
+        				rank = bucketCollection.get(i).get(j).getRank();
+        				this.bucketCollection.get(i).get(j).setRank(++rank);
+        			} else {
+        				rank = bucketCollection.get(i).get(k).getRank();
+        				this.bucketCollection.get(i).get(k).setRank(++rank);
+        			}
+        		}  	   		
         	}
         }
         
+        fillFinalSolution();
+        
         // Print sorted call number array
-        for(int j = 0; j < bucketSortedCnbs.size(); j++) {
-        	if(bucketSortedCnbs.get(j) == null) {
+        for(int j = 0; j < bucketSortedCnbs.length; j++) {
+        	if(bucketSortedCnbs[j] == null) {
         		topMenErrorMsg("Whoops! Cleanup in aisle " + j + "! \nHighly advanced janitor monkeys dispatched!");
-        	} else System.out.println("Index " + j + " = " + bucketSortedCnbs.get(j).getTitle());
+        	} else System.out.println("Index " + j + " = " + bucketSortedCnbs[j].getTitle());
 	    }
 	}
 	
 	public void topMenErrorMsg(String msg) {
 		Window.alert(msg);
+	}
+	
+	public void fillFinalSolution() {
+		int arrayIndex = 0;
+		for(int i = 0; i < this.bucketCollection.size(); i++) {
+			System.out.println("Bucket Index " + i);
+			for(int j = 0; j < this.bucketCollection.get(i).size(); j++) {
+				System.out.println("	" + this.bucketCollection.get(i).get(j).getTitle());
+				this.bucketSortedCnbs[arrayIndex + bucketCollection.get(i).get(j).getRank()] = bucketCollection.get(i).get(j);
+			}
+			arrayIndex += bucketCollection.get(i).size();
+		}
 	}
 }
