@@ -24,8 +24,7 @@ public class CallNumberButton extends Button {
 	/* Compares the strings at levelIndex. Repeatedly called to assess the level of difference!
 	 * */
 	public boolean isLevelEqual(CallNumberButton cnb, int levelIndex) {
-		
-		return this.levels[levelIndex] == cnb.levels[levelIndex];
+		return this.levels[levelIndex].equals(cnb.levels[levelIndex]);
 	}
 	
 	/* Returns the "alphabetically earlier" call number after comparing each level
@@ -46,7 +45,7 @@ public class CallNumberButton extends Button {
 		 * The latter has 3 levels and the former 4, so max = 3
 		 * Level 0 matches -> increment i (aka level index) i = 1
 		 * Level 1 matches -> increment i					i = 2
-		 * Level 2 doesn't match. Now we compare characters at level 2
+)		 * Level 2 doesn't match. Now we compare characters at level 2
 		 */
 		int i = 0;
 		while(this.isLevelEqual(cnb, i) && i <= max) {
@@ -73,8 +72,8 @@ public class CallNumberButton extends Button {
 		String cn1Num = cnb1.levels[levelIndex].replaceAll("[^\\d.]", "");
 		String cn2Num = cnb2.levels[levelIndex].replaceAll("[^\\d.]", "");
 		
-		int cNum1 = Integer.parseInt(cn1Num);
-		int cNum2 = Integer.parseInt(cn2Num);
+		float cNum1 = Float.parseFloat(cn1Num);
+		float cNum2 = Float.parseFloat(cn2Num);
 		
 		int maxLevelCN1 = cnb1.levels.length - 1;
 		int maxLevelCN2 = cnb2.levels.length - 1;
@@ -95,12 +94,12 @@ public class CallNumberButton extends Button {
 			// Compare the numbers if the alphabet are equal
 			// Converting whole integers into decimals
 			int divisor = cn1Num.toCharArray().length;
-			cNum1 = cNum1 / (10 ^ divisor); // 1234 becomes 0.1234
+			double cDub1 = cNum1 / (Math.pow(10, divisor)); // 1234 becomes 0.1234
 			
 			divisor = cn2Num.toCharArray().length;
-			cNum2 = cNum2 / (10 ^ divisor);
+			double cDub2 = cNum2 / (Math.pow(10, divisor));
 			
-			if(cNum1 < cNum2) {
+			if(cDub1 < cDub2) {
 				return cnb1;
 			} else return cnb2;
 			
