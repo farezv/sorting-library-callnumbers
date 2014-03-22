@@ -99,7 +99,8 @@ public class Sortsomething implements EntryPoint {
 		widgetDragController.registerDropController(widgetDropController);
 
 		// scoreMe button setup
-		scoreMeButton.setPixelSize(100,40);
+		scoreMeButton.setPixelSize(120,60);
+		scoreMeButton.setVisible(false);
 		//scoreMeButton.setStyleName("scoreMe");
 		scoreMeButton.addClickHandler(new ClickHandler() {
 			
@@ -136,12 +137,12 @@ public class Sortsomething implements EntryPoint {
 		});
 		
 		// startQuiz button setup
-		startQuizButton.setPixelSize(100,40);
+		startQuizButton.setPixelSize(120,60);
 		startQuizButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
+				scoreMeButton.setVisible(true);
 				String input = inputArea.getText();
 				
 				if (input == null || input.trim().equals("")) { // Checking for empty strings
@@ -168,15 +169,15 @@ public class Sortsomething implements EntryPoint {
 
 		// inputBox text box setup
 		inputArea.setFocus(true);
-		inputArea.setPixelSize(leftWidth,leftHeight);
+		inputArea.setPixelSize(leftWidth,rightHeight);
 
 		// Left panel setup
-		leftPanel.setPixelSize(leftWidth + 10, leftHeight + 200);
+		leftPanel.setPixelSize(leftWidth + 10, leftHeight + 150);
 		leftPanel.add(inputArea);
 		leftPanel.add(startQuizButton);
 		
 		// Right panel setup
-		rightPanel.setPixelSize(rightWidth, rightHeight + 200);
+		rightPanel.setPixelSize(rightWidth, rightHeight + 140);
 		rightPanel.add(boundaryPanel);
 		rightPanel.add(scoreMeButton);
 		
