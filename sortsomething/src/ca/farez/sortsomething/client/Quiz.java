@@ -22,7 +22,6 @@ public class Quiz {
 	public ArrayList<String> userCallNums = new ArrayList<String>(); // User's solution, maybe sorted or unsorted
 	private int mistakes; // Difference between our solution and user's
 	
-	public ArrayList<Integer> bucketIndices = new ArrayList<Integer>(); // Used to fine sort individual buckets later
 	CallNumberButton[] bucketSortedCnbs;
 	// Two dimensional array list of array lists. The first indexes through buckets. Each bucket contains an ArrayList of Call Number Buttons
 	public ArrayList<ArrayList<CallNumberButton>> bucketCollection = new ArrayList<ArrayList<CallNumberButton>>();
@@ -221,5 +220,15 @@ public class Quiz {
 			}
 			arrayIndex += bucketCollection.get(i).size();
 		}
+	}
+	
+	/*	Cleaning up all the data structures
+	 * */
+	public void clean() {
+		
+		this.sortedCallNums.clear();
+		this.userCallNums.clear();
+		this.bucketCollection.clear();
+		this.bucketSortedCnbs = new CallNumberButton[callNums.size()];
 	}
 }

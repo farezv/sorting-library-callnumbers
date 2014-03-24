@@ -106,6 +106,9 @@ public class Sortsomething implements EntryPoint {
 			
 			@Override
 			public void onClick(ClickEvent event) {
+				// Clear all of Quiz's data structures to avoid null pointers and index out of bounds
+				newQuiz.clean();
+				
 				// Finds the position on buttons/callnumbers as arranged by users  
 				int numOfButtons = cnPanel.getWidgetCount();
 				setUserOrder(numOfButtons);
