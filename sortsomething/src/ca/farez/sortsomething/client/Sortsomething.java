@@ -60,6 +60,7 @@ public class Sortsomething implements EntryPoint {
 	// Panels
 	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
 	final HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
+	HorizontalPanel quizPanel = new HorizontalPanel();
 	HorizontalPanel mainPanel = new HorizontalPanel();
 	VerticalPanel leftPanel = new VerticalPanel();
 	VerticalPanel rightPanel = new VerticalPanel();
@@ -134,7 +135,9 @@ public class Sortsomething implements EntryPoint {
 					mistakeLabel = new Label("Correct Solution!");
 					mistakeLabel.addStyleName("noMistakes");
 				}
-				
+				if(boundaryPanel.getWidgetCount() > 1) {
+					boundaryPanel.remove(1);
+				}				
 				boundaryPanel.add(mistakeLabel);
 			}
 		});
@@ -187,11 +190,14 @@ public class Sortsomething implements EntryPoint {
 		// Populating Boundary Panel
 		boundaryPanel.add(cnPanel);
 		
-		// Populating Main Panel		
-		mainPanel.setPixelSize(960, 600);
-		mainPanel.add(leftPanel);
-		mainPanel.add(rightPanel);
+		// Populating Quiz Panel		
+		quizPanel.setPixelSize(960, 600);
+		quizPanel.add(leftPanel);
+		quizPanel.add(rightPanel);
 
+		// Populating Main Panel
+		mainPanel.add(quizPanel);
+		
 		// Adding panels & buttons to Root
 		RootPanel.get().add(mainPanel);
 
