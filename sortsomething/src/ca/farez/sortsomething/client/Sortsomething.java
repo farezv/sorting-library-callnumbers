@@ -42,6 +42,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -60,18 +61,25 @@ public class Sortsomething implements EntryPoint {
 	// Panels
 	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
 	final HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
-	HorizontalPanel quizPanel = new HorizontalPanel();
-	HorizontalPanel mainPanel = new HorizontalPanel();
+	HorizontalPanel manualQuizPanel = new HorizontalPanel();
+	TabPanel mainPanel = new TabPanel();
 	VerticalPanel leftPanel = new VerticalPanel();
 	VerticalPanel rightPanel = new VerticalPanel();
+	VerticalPanel autoQuizPanel = new VerticalPanel();
+		
+	// Labels
 	Label mistakeLabel;
 	
 	// Buttons
 	Button scoreMeButton = new Button("Score Me!");
 	Button startQuizButton = new Button("Start Quiz!");
-
+	Button generateQuizButton = new Button("Generate Quiz!");
+	
 	// Input
 	public TextArea inputArea = new TextArea();
+	public TextBox generateQuizTextBox = new TextBox();
+	
+	// Defined classes
 	public Quiz newQuiz = new Quiz();
 
 
@@ -190,13 +198,22 @@ public class Sortsomething implements EntryPoint {
 		// Populating Boundary Panel
 		boundaryPanel.add(cnPanel);
 		
-		// Populating Quiz Panel		
-		quizPanel.setPixelSize(960, 600);
-		quizPanel.add(leftPanel);
-		quizPanel.add(rightPanel);
+		// Populating Manual Quiz Panel		
+		manualQuizPanel.setPixelSize(960, 600);
+		manualQuizPanel.add(leftPanel);
+		manualQuizPanel.add(rightPanel);
 
+		// Generate Quiz setup
+		generateQuizTextBox.getElement().setPropertyString("placeholder", "Enter the size of the quiz");
+		
+		// Populating Generated Quiz Panel
+		autoQuizPanel.add(generateQuizTextBox);
+		autoQuizPanel.add(generateQuizButton);
+		
 		// Populating Main Panel
-		mainPanel.add(quizPanel);
+		mainPanel.add(autoQuizPanel, "Generate Quiz Automatically");
+		mainPanel.add(manualQuizPanel, "Create Quiz Manually");
+		mainPanel.selectTab(0);
 		
 		// Adding panels & buttons to Root
 		RootPanel.get().add(mainPanel);
