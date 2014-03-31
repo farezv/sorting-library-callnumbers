@@ -81,7 +81,7 @@ public class Sortsomething implements EntryPoint {
 	
 	// Defined classes
 	public Quiz newQuiz = new Quiz();
-
+    private AutoQuizServiceAsync autoQuizSvc = GWT.create(AutoQuizService.class);
 
 	/* Entry point method.  */  
 	public void onModuleLoad() {  
@@ -178,6 +178,39 @@ public class Sortsomething implements EntryPoint {
 							}
 						}
 				}	
+			}
+		});
+		
+		// generateQuizButton setup
+		generateQuizButton.setPixelSize(120, 60);
+		generateQuizButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				int size = Integer.parseInt(generateQuizTextBox.getText());
+				
+				if (size <= 0) { // Checking for empty strings
+					Window.alert("Please enter a valid quiz size!");
+				}
+				
+				// Initialising the service proxy
+				if(autoQuizSvc == null) {
+					autoQuizSvc = GWT.create(AutoQuizService.class);
+				}
+				
+				// Setup callback object
+				AsyncCallback<String> callback = new AsyncCallback<String>() {
+					public void onFailure(Throwable caught) {
+						System.out.println("Exception caught: " + caught);
+					}
+					
+					public void onSuccess(String quiz) {
+						// Populate the quiz based on this input
+						System.out.println("Successfully retrieved quiz " + quiz);
+					}
+				};
+			
+				// Making the call to the auto quiz generation service
+				autoQuizSvc.getQuiz(size, callback);
 			}
 		});
 
