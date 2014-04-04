@@ -101,6 +101,7 @@ public class Quiz {
 			if(isDuplicate(input[i])) { // expensive call!
 				System.out.println(input[i] + " is already in list!");
 			} else {			
+				// Populating the client side quiz
 					callNums.add(input[i]);
 					newCallNums++;
 			}

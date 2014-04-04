@@ -7,4 +7,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface AutoQuizService extends RemoteService {
 	
 	String getQuiz(int size);
+	void addString(String str);
 }

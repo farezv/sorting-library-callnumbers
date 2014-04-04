@@ -5,4 +5,5 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface AutoQuizServiceAsync {
 	
 	public void getQuiz(int size, AsyncCallback<String> callback);
+	public void addString(String str, AsyncCallback<Void> callback);
 }

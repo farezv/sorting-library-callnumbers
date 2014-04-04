@@ -167,9 +167,11 @@ public class Sortsomething implements EntryPoint {
 						// Reassemble call number panel only if there are NEW call numbers!
 						if(newCallNums > 0) {
 							cnPanel.clear();
+							AsyncCallback<Void> callback = autoQuizVoidSetup();
 							// TODO figure out how to switch to next panel if we've reached the right most side
 							Button cnb;		
 							for(int i = 0; i < newQuiz.callNums.size(); i++) {
+								autoQuizSvc.addString(newQuiz.callNums.get(i), callback);
 								cnb = new Button(newQuiz.callNums.get(i));
 								// TODO cnb.addStyleName("lineBreak");
 								cnPanel.add(cnb);
@@ -192,11 +194,11 @@ public class Sortsomething implements EntryPoint {
 				}
 				int size = Integer.parseInt(input);
 				
-				if (size <= 0) { // Checking for empty strings
+				if (size <= 0) { // Checking for invalid size
 					Window.alert("Please enter a valid quiz size!");
 				}
 				
-				AsyncCallback<String> callback = autoQuizServiceSetup();
+				AsyncCallback<String> callback = autoQuizStringSetup();
 				
 				// Making the call to the auto quiz generation service
 				autoQuizSvc.getQuiz(size, callback);
@@ -255,7 +257,7 @@ public class Sortsomething implements EntryPoint {
 		}
 	}
 
-	private AsyncCallback<String> autoQuizServiceSetup() {
+	private AsyncCallback<String> autoQuizStringSetup() {
 		// Initialising the service proxy
 		if(autoQuizSvc == null) {
 			autoQuizSvc = GWT.create(AutoQuizService.class);
@@ -270,6 +272,27 @@ public class Sortsomething implements EntryPoint {
 			public void onSuccess(String quiz) {
 				// Populate the quiz based on this input
 				System.out.println("Successfully retrieved quiz " + quiz);
+			}
+		};
+		return callback;
+	}
+	
+	private AsyncCallback<Void> autoQuizVoidSetup() {
+		// Initialising the service proxy
+		if(autoQuizSvc == null) {
+			autoQuizSvc = GWT.create(AutoQuizService.class);
+		}
+		
+		// Setup callback object
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+			public void onFailure(Throwable caught) {
+				System.out.println("Exception caught: " + caught);
+			}
+			
+			@Override
+			public void onSuccess(Void result) {
+				// Populate the quiz based on this input
+				System.out.println("Successfully added string\n");
 			}
 		};
 		return callback;
