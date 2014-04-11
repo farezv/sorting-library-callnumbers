@@ -31,6 +31,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -172,6 +173,17 @@ public class Sortsomething implements EntryPoint {
 							Button cnb;		
 							for(int i = 0; i < newQuiz.callNums.size(); i++) {
 								autoQuizSvc.addString(newQuiz.callNums.get(i), callback);
+								
+								Timer timer = new Timer()
+						        {
+						            @Override
+						            public void run()
+						            {
+						                
+						            }
+						        };
+						        timer.schedule(5000);
+						        
 								cnb = new Button(newQuiz.callNums.get(i));
 								// TODO cnb.addStyleName("lineBreak");
 								cnPanel.add(cnb);
