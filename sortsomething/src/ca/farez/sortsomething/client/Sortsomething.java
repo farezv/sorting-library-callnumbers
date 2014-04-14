@@ -31,6 +31,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -53,19 +54,20 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class Sortsomething implements EntryPoint {
 
-	// Size Constants
+	// Constants
 	int leftWidth = 150;
 	int leftHeight = 400;	
 	int rightWidth = 1000;
 	int rightHeight = 400;
+	int inputAreaOnClickCount = 0; // Never goes more than 1
 	
 	// Panels
 	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
 	final HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
-	HorizontalPanel manualQuizPanel = new HorizontalPanel();
+	VerticalPanel manualQuizPanel = new VerticalPanel();
 	TabPanel mainPanel = new TabPanel();
-	VerticalPanel leftPanel = new VerticalPanel();
-	VerticalPanel rightPanel = new VerticalPanel();
+	HorizontalPanel topPanel = new HorizontalPanel();
+	HorizontalPanel bottomPanel = new HorizontalPanel();
 	VerticalPanel autoQuizPanel = new VerticalPanel();
 		
 	// Labels
@@ -75,6 +77,7 @@ public class Sortsomething implements EntryPoint {
 	Button scoreMeButton = new Button("Score Me!");
 	Button startQuizButton = new Button("Start Quiz!");
 	Button generateQuizButton = new Button("Generate Quiz!");
+	Button newQuizButton = new Button("New Quiz!");
 	
 	// Input
 	public TextArea inputArea = new TextArea();
@@ -217,27 +220,54 @@ public class Sortsomething implements EntryPoint {
 			}
 		});
 
+		// newQuizButton Setup
+		newQuizButton.setPixelSize(120, 60);
+		newQuizButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				cnPanel.clear();
+				newQuiz.clean();
+				inputArea.setText("");
+				newQuiz.callNums.clear(); // The clean() call above doesn't clear the entered call number list
+				if(boundaryPanel.getWidgetCount() > 1) {
+					boundaryPanel.remove(1);
+				}
+			}			
+		});
+		
 		// inputBox text box setup
 		inputArea.setFocus(true);
 		inputArea.setPixelSize(leftWidth,rightHeight);
+		inputArea.setText("Enter one call number per line. For example,\n\n"
+				+ "A100 TA2 2006\n"
+				+ "PC2600 Z68 2012\n"
+				+ "G53 XN1 2011\n");
+		inputArea.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if(inputAreaOnClickCount == 0) {
+					inputArea.setText("");
+				}
+				inputAreaOnClickCount++;
+			}
+		});
 
-		// Left panel setup
-		leftPanel.setPixelSize(leftWidth + 10, leftHeight + 150);
-		leftPanel.add(inputArea);
-		leftPanel.add(startQuizButton);
-		
-		// Right panel setup
-		rightPanel.setPixelSize(rightWidth, rightHeight + 140);
-		rightPanel.add(boundaryPanel);
-		rightPanel.add(scoreMeButton);
+		// Top panel setup
+		topPanel.add(inputArea);
+		topPanel.add(boundaryPanel);
+				
+		// Bottom panel setup
+		bottomPanel.add(startQuizButton);
+		bottomPanel.add(newQuizButton);
+		bottomPanel.add(scoreMeButton);
 		
 		// Populating Boundary Panel
 		boundaryPanel.add(cnPanel);
 		
 		// Populating Manual Quiz Panel		
 		manualQuizPanel.setPixelSize(960, 600);
-		manualQuizPanel.add(leftPanel);
-		manualQuizPanel.add(rightPanel);
+		manualQuizPanel.add(topPanel);
+		manualQuizPanel.add(bottomPanel);
 
 		// Generate Quiz setup
 		generateQuizTextBox.getElement().setPropertyString("placeholder", "Enter the size of the quiz");

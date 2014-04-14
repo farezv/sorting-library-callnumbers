@@ -226,7 +226,7 @@ public class Quiz {
 	/*	Cleaning up all the data structures
 	 * */
 	public void clean() {
-		
+		// Cannot clear callNums because that is the original list of call numbers that we still need for >1 attempts
 		this.sortedCallNums.clear();
 		this.userCallNums.clear();
 		this.bucketCollection.clear();
