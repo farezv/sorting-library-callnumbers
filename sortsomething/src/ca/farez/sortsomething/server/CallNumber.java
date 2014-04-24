@@ -22,11 +22,15 @@ public class CallNumber implements IsSerializable {
 		this.callnum = cn;
 	}
 	
-	public String getString() {
+	public String getCallNumberString() {
 		return callnum;
 	}
 	
-	public Key getCallNumKey() {
+	public Key getKey() {
 		return cnKey;
+	}
+	
+	public void setKey(Key key) {
+		this.cnKey = key;
 	}
 }

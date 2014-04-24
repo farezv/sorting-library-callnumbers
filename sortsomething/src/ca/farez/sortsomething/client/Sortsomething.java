@@ -175,18 +175,9 @@ public class Sortsomething implements EntryPoint {
 							// TODO figure out how to switch to next panel if we've reached the right most side
 							Button cnb;		
 							for(int i = 0; i < newQuiz.callNums.size(); i++) {
+								// Storing string in db asynchronously
 								autoQuizSvc.addString(newQuiz.callNums.get(i), callback);
-								
-								Timer timer = new Timer()
-						        {
-						            @Override
-						            public void run()
-						            {
-						                
-						            }
-						        };
-						        timer.schedule(5000);
-						        
+								// Adding call number to the UI					        
 								cnb = new Button(newQuiz.callNums.get(i));
 								// TODO cnb.addStyleName("lineBreak");
 								cnPanel.add(cnb);
@@ -331,7 +322,6 @@ public class Sortsomething implements EntryPoint {
 				System.out.println("Exception caught: " + caught);
 			}
 			
-			@Override
 			public void onSuccess(Void result) {
 				// Populate the quiz based on this input
 				System.out.println("Successfully added string\n");
