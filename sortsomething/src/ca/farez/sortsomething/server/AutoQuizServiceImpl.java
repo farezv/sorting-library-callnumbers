@@ -23,7 +23,7 @@ public class AutoQuizServiceImpl extends RemoteServiceServlet implements
 		// TODO Generate a random call number quiz of size given using the stored strings in datastore
 		String quiz = null;
 		for(int i = 0; i < size; i++) {
-			
+			//pm.g
 		}
 		
 		return quiz;

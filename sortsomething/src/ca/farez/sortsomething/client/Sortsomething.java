@@ -16,6 +16,7 @@
 package ca.farez.sortsomething.client;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import ca.farez.sortsomething.shared.FieldVerifier;
 
@@ -32,6 +33,8 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -161,7 +164,7 @@ public class Sortsomething implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				scoreMeButton.setVisible(true);
-				String input = inputArea.getText();
+				String input = inputArea.getText().toUpperCase();
 				
 				if (input == null || input.trim().equals("")) { // Checking for empty strings
 					Window.alert("Please type something in the text box!");
@@ -197,17 +200,18 @@ public class Sortsomething implements EntryPoint {
 				String input = generateQuizTextBox.getText();
 				if (input == null || input.trim().equals("")) { // Checking for empty strings
 					Window.alert("Please type something in the text box!");
+				} else {
+					int size = Integer.parseInt(input);					
+					if (size <= 0) { // Checking for invalid size
+						Window.alert("Please enter a valid quiz size!");
+					} else {
+						String randomQuiz = generateRandomQuiz(size);
+						AsyncCallback<String> callback = autoQuizStringSetup();
+						// Making the call to the auto quiz generation service
+						autoQuizSvc.getQuiz(size, callback);
+						inputArea.setText(randomQuiz);
+					}
 				}
-				int size = Integer.parseInt(input);
-				
-				if (size <= 0) { // Checking for invalid size
-					Window.alert("Please enter a valid quiz size!");
-				}
-				
-				AsyncCallback<String> callback = autoQuizStringSetup();
-				
-				// Making the call to the auto quiz generation service
-				autoQuizSvc.getQuiz(size, callback);
 			}
 		});
 
@@ -328,5 +332,57 @@ public class Sortsomething implements EntryPoint {
 			}
 		};
 		return callback;
+	}
+	
+	private String generateRandomQuiz(int size) {
+		String quiz = "";
+		String block = "";
+		String callnumber = "";
+		int numBlocks; 	// 3, 4 or 5 including year
+		int cnInt;	// Range 1 - 9 no decimals for now
+		int numInts; // 1, 2, 3 or 4 integers
+		int numAlpha;	// 1, 2 or 3 alphabet letters
+		
+		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+		
+		// For every call number
+		for(int i = 0; i < size; i++) {
+			
+			// Make 2,3, or 4 line/blocks
+			numBlocks = Random.nextInt(3) + 2;
+			
+			// For every block
+			for(int j = 0; j < numBlocks; j++) {
+				
+				numInts = Random.nextInt(4) + 1;
+				cnInt = Random.nextInt(10);
+				numAlpha = Random.nextInt(3) + 1;
+				
+				block = "";
+				for(int k = 0; k < numAlpha; k++) {					
+					block += chars[Random.nextInt(chars.length)];
+				}
+				block = block.toUpperCase();
+				
+				for(int m = 0; m < numInts; m++) {
+					block += Integer.toString(cnInt);
+					cnInt = Random.nextInt(10);	
+				}				
+			
+				if(j < numBlocks - 1) block += " ";
+				callnumber += block;
+				
+				Date today = new Date();
+				String year = DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[2];
+				callnumber += Integer.toString(Random.nextInt(2015) + 1900);
+			}
+			
+			// Append a "year" to the call number
+			
+			// Append it to quiz
+			quiz = callnumber + "\r\n";
+		}
+		
+		return quiz;		
 	}
 }
