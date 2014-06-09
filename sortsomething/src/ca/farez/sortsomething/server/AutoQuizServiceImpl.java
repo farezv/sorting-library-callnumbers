@@ -25,8 +25,8 @@ public class AutoQuizServiceImpl extends RemoteServiceServlet implements
 		for(int i = 0; i < size; i++) {
 			//pm.g
 		}
-		
-		return quiz;
+		String lineSeparator = System.getProperty("line.separator");
+		return lineSeparator;
 	}
 
 	public void addString(String callnum) {

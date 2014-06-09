@@ -63,6 +63,7 @@ public class Sortsomething implements EntryPoint {
 	int rightWidth = 1000;
 	int rightHeight = 400;
 	int inputAreaOnClickCount = 0; // Never goes more than 1
+	String lineSeparator = "\r\n";
 	
 	// Panels
 	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
@@ -205,10 +206,10 @@ public class Sortsomething implements EntryPoint {
 					if (size <= 0) { // Checking for invalid size
 						Window.alert("Please enter a valid quiz size!");
 					} else {
-						String randomQuiz = generateRandomQuiz(size);
 						AsyncCallback<String> callback = autoQuizStringSetup();
 						// Making the call to the auto quiz generation service
 						autoQuizSvc.getQuiz(size, callback);
+						String randomQuiz = generateRandomQuiz(size);
 						inputArea.setText(randomQuiz);
 					}
 				}
@@ -308,7 +309,8 @@ public class Sortsomething implements EntryPoint {
 			
 			public void onSuccess(String quiz) {
 				// Populate the quiz based on this input
-				System.out.println("Successfully retrieved quiz " + quiz);
+				System.out.println("Successfully retrieved line separator " + quiz);
+				lineSeparator = quiz;
 			}
 		};
 		return callback;
@@ -370,17 +372,16 @@ public class Sortsomething implements EntryPoint {
 				}				
 			
 				if(j < numBlocks - 1) block += " ";
-				callnumber += block;
-				
-				Date today = new Date();
-				String year = DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[2];
-				callnumber += Integer.toString(Random.nextInt(2015) + 1900);
+				callnumber += block;				
 			}
 			
 			// Append a "year" to the call number
+			Date today = new Date();
+			String year = DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[2];
+			callnumber = callnumber + " " + Integer.toString(Random.nextInt(Integer.parseInt(year) + 1));
 			
 			// Append it to quiz
-			quiz = callnumber + "\r\n";
+			quiz = callnumber + lineSeparator;
 		}
 		
 		return quiz;		
