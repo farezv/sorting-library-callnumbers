@@ -1,38 +1,81 @@
 /** Add css rules here for your application. */
 
-
-/* Boundary Panel
+/* Title
 */
+.h1 {
+	color: #550000;
+	position: absolute; left:25%;
+}
+
+/* Panels
+*/
+.mainPanel {
+	display: block;
+	margin-left: auto;
+  	margin-right: auto;
+  	position: relative; left:15%; top:5%; right:25%; bottom:15%;
+}
+
+.topPanel {
+}
+
 .boundaryPanel {
 	padding: 10px;
-	background-color: #B3FF87; /* bright green */ 
+	background-color: #D1ED9E;
+	margin: 5% 5% 5% 5%;
+	position: absolute; top:10%; bottom:10%;
 }
 
-/* Callnumber Panel 
-*/
 .cnPanel {
 	padding-top: 10px;
-	background-color: #808080; /* gray */
+	background-color: #AA3939;
+	margin: 5% 5% 5% 5%;
+	position: absolute; left:15%; top:5%; right:15%; bottom:15%;
 }
 
-/* Target Panel 
-*/
-.targetPanel {
-	padding-bottom: 10px;
-	background-color: #87B3FF; /* bright blue */
+.inputArea{
+	margin: 5% 5% 5% 5%;
+	position: relative; top:10%; bottom:10%;
 }
 
-/* Button
+/* Buttons
 */
 .lineBreak {
 	white-space: pre;
 }
 
-/* Score Me Button
-*/
+.callNumber {
+	background-color: #FFAAAA;
+}
+
+.gwt-Button { 
+	background-color: #A2C523;
+    border-radius: 0 2px 2px 0;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2727272727;
+    margin: 2px 4px 2px 10px;
+    padding: 3px 7px;
+    position: relative;
+    text-transform: uppercase;
+}
+
 .scoreMe {
 	padding-top: 30px;
 	font-size: 14px;
+}
+
+/* Labels
+*/
+
+.callNumsHere {
+	font-color: #334F00;
+	font-size: 200%;
+    font-weight: 700;
+    display: block;
+	margin: 10% 10% 10% 10%;
+    opacity: 0.4;
 }
 
 .noMistakes {

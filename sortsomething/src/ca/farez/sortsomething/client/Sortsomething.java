@@ -67,7 +67,7 @@ public class Sortsomething implements EntryPoint {
 	
 	// Panels
 	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
-	final HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
+	HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
 	VerticalPanel manualQuizPanel = new VerticalPanel();
 	TabPanel mainPanel = new TabPanel();
 	HorizontalPanel topPanel = new HorizontalPanel();
@@ -76,6 +76,7 @@ public class Sortsomething implements EntryPoint {
 		
 	// Labels
 	Label mistakeLabel;
+	Label callNumsHere;
 	
 	// Buttons
 	Button scoreMeButton = new Button("Score Me!");
@@ -94,17 +95,18 @@ public class Sortsomething implements EntryPoint {
 	/* Entry point method.  */  
 	public void onModuleLoad() {  
 
-		// Drag handler
-		final DragHandler demoDragHandler = null;
-
+		// Boundary panel message on startup
+		callNumsHere = new Label("Call Numbers will display here!");
+		callNumsHere.addStyleName("callNumsHere");
+		
 		// Boundary panel setup
-		boundaryPanel.setPixelSize(rightWidth,rightHeight);
+		boundaryPanel.setWidth("600px");
 		boundaryPanel.addStyleName("boundaryPanel");
 		boundaryPanel.getElement().getStyle().setProperty("position", "relative");
+		boundaryPanel.add(callNumsHere);
 
 		// Call number panel setup	
-		cnPanel.addStyleName("cnPanel");
-		cnPanel.setPixelSize(400, 90);
+//		cnPanel.addStyleName("cnPanel");
 
 		// Setting up widget drag controller
 		final PickupDragController widgetDragController = new PickupDragController(boundaryPanel, false);
@@ -118,7 +120,6 @@ public class Sortsomething implements EntryPoint {
 		// scoreMe button setup
 		scoreMeButton.setPixelSize(120,60);
 		scoreMeButton.setVisible(false);
-		//scoreMeButton.setStyleName("scoreMe");
 		scoreMeButton.addClickHandler(new ClickHandler() {
 			
 			@Override
@@ -154,7 +155,7 @@ public class Sortsomething implements EntryPoint {
 				if(boundaryPanel.getWidgetCount() > 1) {
 					boundaryPanel.remove(1);
 				}				
-				boundaryPanel.add(mistakeLabel);
+				bottomPanel.add(mistakeLabel);
 			}
 		});
 		
@@ -183,13 +184,14 @@ public class Sortsomething implements EntryPoint {
 								autoQuizSvc.addString(newQuiz.callNums.get(i), callback);
 								// Adding call number to the UI					        
 								cnb = new Button(newQuiz.callNums.get(i));
-								// TODO cnb.addStyleName("lineBreak");
+								cnb.addStyleName("gwt-Button");
 								cnPanel.add(cnb);
 								cnb.setPixelSize(60,90);								
 								widgetDragController.makeDraggable(cnb);
 							}
 						}
-				}	
+						callNumsHere.setVisible(false);
+					}	
 			}
 		});
 		
@@ -233,11 +235,12 @@ public class Sortsomething implements EntryPoint {
 		
 		// inputBox text box setup
 		inputArea.setFocus(true);
-		inputArea.setPixelSize(leftWidth,rightHeight);
+//		inputArea.setPixelSize(leftWidth,rightHeight);
 		inputArea.setText("Enter one call number per line. For example,\n\n"
 				+ "A100 TA2 2006\n"
 				+ "PC2600 Z68 2012\n"
 				+ "G53 XN1 2011\n");
+		inputArea.addStyleName("inputArea");
 		inputArea.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -251,6 +254,7 @@ public class Sortsomething implements EntryPoint {
 		// Top panel setup
 		topPanel.add(inputArea);
 		topPanel.add(boundaryPanel);
+//		topPanel.addStyleName("topPanel");
 				
 		// Bottom panel setup
 		bottomPanel.add(startQuizButton);
@@ -261,7 +265,6 @@ public class Sortsomething implements EntryPoint {
 		boundaryPanel.add(cnPanel);
 		
 		// Populating Manual Quiz Panel		
-		manualQuizPanel.setPixelSize(960, 600);
 		manualQuizPanel.add(topPanel);
 		manualQuizPanel.add(bottomPanel);
 
@@ -275,14 +278,11 @@ public class Sortsomething implements EntryPoint {
 		// Populating Main Panel
 		mainPanel.add(autoQuizPanel, "Generate Quiz Automatically");
 		mainPanel.add(manualQuizPanel, "Create Quiz Manually");
-		mainPanel.selectTab(0);
+		mainPanel.selectTab(1);
+//		mainPanel.addStyleName("mainPanel");
 		
 		// Adding panels & buttons to Root
-		RootPanel.get().add(mainPanel);
-
-		// Associate the Main panel with the HTML host page.  
-		//RootPanel.get("cnList").add(boundaryPanel);
-		
+		RootPanel.get("rootPanel").add(mainPanel);
 	}
 
 	public void setUserOrder(int numButtons) {
