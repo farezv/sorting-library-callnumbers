@@ -25,6 +25,7 @@ import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.HorizontalPanelDropController;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -41,6 +42,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -60,7 +62,7 @@ public class Sortsomething implements EntryPoint {
 	// Constants
 	int leftWidth = 150;
 	int leftHeight = 400;	
-	int rightWidth = 1000;
+	int rightWidth = 500;
 	int rightHeight = 400;
 	int inputAreaOnClickCount = 0; // Never goes more than 1
 	String lineSeparator = "\r\n";
@@ -69,10 +71,11 @@ public class Sortsomething implements EntryPoint {
 	AbsolutePanel boundaryPanel = new AbsolutePanel(); // restricts drag operations
 	HorizontalPanel cnPanel = new HorizontalPanel(); // contains call number "buttons"
 	VerticalPanel manualQuizPanel = new VerticalPanel();
-	TabPanel mainPanel = new TabPanel();
+	TabPanel tabPanel = new TabPanel();
 	HorizontalPanel topPanel = new HorizontalPanel();
 	HorizontalPanel bottomPanel = new HorizontalPanel();
 	VerticalPanel autoQuizPanel = new VerticalPanel();
+	DockLayoutPanel mainPanel = new DockLayoutPanel(Style.Unit.PX);
 		
 	// Labels
 	Label mistakeLabel;
@@ -146,14 +149,16 @@ public class Sortsomething implements EntryPoint {
 				int mistakes = newQuiz.compare();
 				//System.out.println("Mistakes AFTER compare() = " + mistakes);
 				if(mistakes > 0) {
-					mistakeLabel = new Label("Number of mistakes = " + mistakes);
+					if(mistakes == 1) {
+						mistakeLabel = new Label(mistakes + " mistake");
+					} else mistakeLabel = new Label(mistakes + " mistakes!");
 					mistakeLabel.addStyleName("yesMistakes");
 				} else {
 					mistakeLabel = new Label("Correct Solution!");
 					mistakeLabel.addStyleName("noMistakes");
 				}
-				if(boundaryPanel.getWidgetCount() > 1) {
-					boundaryPanel.remove(1);
+				if(bottomPanel.getWidgetCount() == 4) {
+					bottomPanel.remove(3);
 				}				
 				bottomPanel.add(mistakeLabel);
 			}
@@ -190,7 +195,8 @@ public class Sortsomething implements EntryPoint {
 								widgetDragController.makeDraggable(cnb);
 							}
 						}
-						callNumsHere.setVisible(false);
+						callNumsHere.removeFromParent();
+						bottomPanel.add(scoreMeButton);
 					}	
 			}
 		});
@@ -230,6 +236,9 @@ public class Sortsomething implements EntryPoint {
 				if(boundaryPanel.getWidgetCount() > 1) {
 					boundaryPanel.remove(1);
 				}
+				boundaryPanel.add(callNumsHere);
+				mistakeLabel.removeFromParent();
+				scoreMeButton.removeFromParent();
 			}			
 		});
 		
@@ -241,6 +250,7 @@ public class Sortsomething implements EntryPoint {
 				+ "PC2600 Z68 2012\n"
 				+ "G53 XN1 2011\n");
 		inputArea.addStyleName("inputArea");
+		inputArea.setHeight("200px");
 		inputArea.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -254,6 +264,7 @@ public class Sortsomething implements EntryPoint {
 		// Top panel setup
 		topPanel.add(inputArea);
 		topPanel.add(boundaryPanel);
+		topPanel.setWidth("500px");
 //		topPanel.addStyleName("topPanel");
 				
 		// Bottom panel setup
@@ -267,6 +278,7 @@ public class Sortsomething implements EntryPoint {
 		// Populating Manual Quiz Panel		
 		manualQuizPanel.add(topPanel);
 		manualQuizPanel.add(bottomPanel);
+		manualQuizPanel.setWidth("800");
 
 		// Generate Quiz setup
 		generateQuizTextBox.getElement().setPropertyString("placeholder", "Enter the size of the quiz");
@@ -276,13 +288,12 @@ public class Sortsomething implements EntryPoint {
 		autoQuizPanel.add(generateQuizButton);
 		
 		// Populating Main Panel
-		mainPanel.add(autoQuizPanel, "Generate Quiz Automatically");
-		mainPanel.add(manualQuizPanel, "Create Quiz Manually");
-		mainPanel.selectTab(1);
-//		mainPanel.addStyleName("mainPanel");
+		tabPanel.add(autoQuizPanel, "Generate Quiz Automatically");
+		tabPanel.add(manualQuizPanel, "Create Quiz Manually");
+		tabPanel.selectTab(1);
 		
 		// Adding panels & buttons to Root
-		RootPanel.get("rootPanel").add(mainPanel);
+		RootPanel.get().add(tabPanel);
 	}
 
 	public void setUserOrder(int numButtons) {
