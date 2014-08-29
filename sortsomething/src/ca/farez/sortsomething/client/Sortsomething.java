@@ -103,13 +103,13 @@ public class Sortsomething implements EntryPoint {
 		callNumsHere.addStyleName("callNumsHere");
 		
 		// Boundary panel setup
-		boundaryPanel.setWidth("600px");
+		boundaryPanel.setPixelSize(1000, 200);
 		boundaryPanel.addStyleName("boundaryPanel");
 		boundaryPanel.getElement().getStyle().setProperty("position", "relative");
 		boundaryPanel.add(callNumsHere);
 
 		// Call number panel setup	
-//		cnPanel.addStyleName("cnPanel");
+		cnPanel.addStyleName("cnPanel");
 
 		// Setting up widget drag controller
 		final PickupDragController widgetDragController = new PickupDragController(boundaryPanel, false);
@@ -196,7 +196,8 @@ public class Sortsomething implements EntryPoint {
 							}
 						}
 						callNumsHere.removeFromParent();
-						bottomPanel.add(scoreMeButton);
+						if(bottomPanel.getWidgetCount() == 4) mistakeLabel.removeFromParent();
+						if(scoreMeButton.getParent() != bottomPanel) bottomPanel.add(scoreMeButton);
 					}	
 			}
 		});
@@ -237,14 +238,13 @@ public class Sortsomething implements EntryPoint {
 					boundaryPanel.remove(1);
 				}
 				boundaryPanel.add(callNumsHere);
-				mistakeLabel.removeFromParent();
+				if(bottomPanel.getWidgetCount() == 4) mistakeLabel.removeFromParent();
 				scoreMeButton.removeFromParent();
 			}			
 		});
 		
 		// inputBox text box setup
 		inputArea.setFocus(true);
-//		inputArea.setPixelSize(leftWidth,rightHeight);
 		inputArea.setText("Enter one call number per line. For example,\n\n"
 				+ "A100 TA2 2006\n"
 				+ "PC2600 Z68 2012\n"
@@ -260,25 +260,24 @@ public class Sortsomething implements EntryPoint {
 				inputAreaOnClickCount++;
 			}
 		});
-
+		
+		// Populating Boundary Panel
+		boundaryPanel.add(cnPanel);
+				
 		// Top panel setup
 		topPanel.add(inputArea);
 		topPanel.add(boundaryPanel);
-		topPanel.setWidth("500px");
-//		topPanel.addStyleName("topPanel");
 				
 		// Bottom panel setup
 		bottomPanel.add(startQuizButton);
 		bottomPanel.add(newQuizButton);
 		bottomPanel.add(scoreMeButton);
-		
-		// Populating Boundary Panel
-		boundaryPanel.add(cnPanel);
+		bottomPanel.addStyleName("bottomPanel");
 		
 		// Populating Manual Quiz Panel		
 		manualQuizPanel.add(topPanel);
 		manualQuizPanel.add(bottomPanel);
-		manualQuizPanel.setWidth("800");
+		manualQuizPanel.addStyleName("manualQuizPanel");
 
 		// Generate Quiz setup
 		generateQuizTextBox.getElement().setPropertyString("placeholder", "Enter the size of the quiz");

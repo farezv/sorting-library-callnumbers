@@ -16,26 +16,29 @@
   	position: relative; left:15%; top:5%; right:25%; bottom:15%;
 }
 
-.topPanel {
+.manualQuizPanel {
+	background-color: #294D00;
+}
+
+.bottomPanel {
+	margin: 2% 2% 2% 2%;
 }
 
 .boundaryPanel {
-	padding: 10px;
+	/* padding: 10px; */
 	background-color: #D1ED9E;
-	margin: 5% 5% 5% 5%;
-	position: absolute; top:10%; bottom:10%;
+	margin: 2% 2% 2% 2%;
 }
 
 .cnPanel {
-	padding-top: 10px;
+	/* padding-top: 10px; */
 	background-color: #AA3939;
-	margin: 5% 5% 5% 5%;
-	position: absolute; left:15%; top:5%; right:15%; bottom:15%;
+	margin: 2% 2% 2% 2%;
+	/* position: relative; left:5%; top:5%; right:5%; bottom:5%; */
 }
 
 .inputArea{
-	margin: 5% 5% 5% 5%;
-	position: relative; top:10%; bottom:10%;
+	margin: 2% 2% 2% 2%;
 }
 
 /* Buttons
@@ -79,13 +82,15 @@
 }
 
 .noMistakes {
-  padding-top: 30px;
-  font-size: 44px;
-  color: green;
+  position: relative; left:10%;
+  font-size: 30px;
+  font-weight: 600;
+  color: #77B75B;
 }
 
 .yesMistakes {
-  padding-top: 30px;
-  font-size: 44px;
-  color: red;
+  position: relative; left:10%;
+  font-size: 30px;
+  font-weight: 600;
+  color: #D46A6A;
 }
